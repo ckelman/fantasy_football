@@ -11,18 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140730161244) do
+ActiveRecord::Schema.define(version: 20140730204434) do
 
   create_table "players", force: true do |t|
     t.string   "name"
     t.string   "position"
     t.integer  "height"
-    t.integer  "weight"
     t.string   "team"
     t.integer  "age"
     t.integer  "experience"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "number"
   end
 
   create_table "seasons", force: true do |t|
@@ -46,10 +46,10 @@ ActiveRecord::Schema.define(version: 20140730161244) do
     t.integer  "interceptions"
     t.float    "rating"
     t.integer  "fumbles"
-    t.integer  "total_points"
     t.integer  "player_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "total_points"
   end
 
 end
