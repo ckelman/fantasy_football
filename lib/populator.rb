@@ -6,7 +6,10 @@ module Populator
     self.get_player_links(list_page).each do |link|
       puts "\n************************************************\n" + link +
       "\n************************************************\n"
+      begin
       self.parse_player(link)
+      rescue
+      end
     end
   end
 
