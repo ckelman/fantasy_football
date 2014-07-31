@@ -30,7 +30,7 @@ module Analyzer
       return nil
     end
     seasons.each do |season|
-      total += season.total_points
+      total += season.total_points * 16 / season.games_played
     end
     total/seasons.size
   end
@@ -42,7 +42,7 @@ module Analyzer
       return nil
     end
     seasons.each do |season|
-      total += season.total_points
+      total += season.total_points * 16 / season.games_played
     end
     total/seasons.size
   end

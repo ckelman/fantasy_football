@@ -132,10 +132,13 @@ module Populator
         rush_row = rushing_table[i].css('td')
       rescue
       end
+
       begin
         rec_row = receiving_table[i].css('td')
       rescue
       end
+
+
       begin
         pass_row = passing_table[i].css('td')
       rescue
@@ -168,13 +171,19 @@ module Populator
       end
 
       begin
+        receptions = rec_row[3].text.to_i
+        targets = rec_row[4].text.to_i
+        rec_yards = rec_row[5].text.gsub(',', '').to_i
+        rec_avg = rec_row[6].text.to_f
+        rec_td = rec_row[8].text.to_i
+        fumbles += rec_row[11].text.to_i
+      rescue
         receptions = 0
         targets = 0
         rec_yards = 0
         rec_avg = 0
         rec_td = 0
         fumbles += 0
-      rescue
       end
 
       begin

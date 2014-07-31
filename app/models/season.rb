@@ -1,12 +1,19 @@
 class Season < ActiveRecord::Base
   belongs_to :player
 
+
+  def relevent
+    my_points = total_points
+    Season.where{total_points - my_points > 50 || total_points - my_points < 50}
+  end
+
   def self.set_all
     self.set_all_ages
     self.set_all_experiences
     self.set_all_change_from_lasts
     self.set_all_positions
   end
+
 
   def self.set_all_positions
     self.all.each do |season|
