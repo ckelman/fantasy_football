@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140731022959) do
+ActiveRecord::Schema.define(version: 20140731151116) do
 
   create_table "players", force: true do |t|
     t.string   "name"
@@ -50,6 +50,10 @@ ActiveRecord::Schema.define(version: 20140731022959) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "total_points"
+    t.integer  "experience"
+    t.integer  "age"
+    t.float    "change_from_last"
+    t.string   "position"
   end
 
 end

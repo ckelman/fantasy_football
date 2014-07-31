@@ -1,0 +1,10 @@
+require 'populator'
+require 'analyzer'
+require 'qb'
+require 'rb'
+require 'wr'
+require 'te'
+include Analyzer::QB
+include Analyzer::RB
+include Analyzer::WR
+include Analyzer::TE

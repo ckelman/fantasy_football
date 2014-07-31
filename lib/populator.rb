@@ -1,8 +1,23 @@
 module Populator
 
+  def self.populate
+    [
+      'http://espn.go.com/fantasy/football/story/_/page/FFLranks14top300/2014-fantasy-football-rankings-preseason-top-300',
+      'http://espn.go.com/fantasy/football/story/_/page/2013preseasonFFLranks250/top-300-position',
+      'http://sports.espn.go.com/fantasy/football/ffl/story?page=NFLDK2K12ranksTop300'
+    ].each do |page|
+      self.populate_from_list_page(page)
+    end
+
+    Player.standardize_positions
+    Season.set_all
+  end
 
   def self.populate_2014
-    list_page = 'http://espn.go.com/fantasy/football/story/_/page/FFLranks14top300/2014-fantasy-football-rankings-preseason-top-300'
+    self.populate_from_list_page('http://espn.go.com/fantasy/football/story/_/page/FFLranks14top300/2014-fantasy-football-rankings-preseason-top-300')
+  end
+
+  def self.populate_from_list_page(list_page)
     self.get_player_links(list_page).each do |link|
       puts "\n************************************************\n" + link +
       "\n************************************************\n"
@@ -31,6 +46,8 @@ module Populator
       return
     end
 
+
+
     top = page.css('.mod-page-header .mod-content')
 
     name = top.css('h1').text
@@ -38,22 +55,20 @@ module Populator
     bio = top.css('.player-bio')
 
     number = bio.css('.general-info li:first-child').text.split(' ')[0].strip
-    begin
-      position = bio.css('.general-info li:first-child').text.split(' ')[1].strip
-    rescue
-      return
-    end
+
+    position = bio.css('.general-info li:first-child').text.split(' ')[1].strip
+
 
     begin
       team = bio.css('.general-info a').text
     rescue
     end
 
-    
+
 
     experience = bio.css('.player-metadata li:nth-child(3)').text.strip
     if (experience =~ /rookie/i)
-      experience = 0
+      experience = 1
     else
       experience = experience.split(' ')[0].split('Experience')[1].to_i
     end
@@ -66,16 +81,22 @@ module Populator
     end
 
     if(Player.where(number: number).where(name: name).size != 0)
+
+
       player = Player.where(number: number).where(name: name)[0]
       player.update_attributes(name: name, position: position,
                 team: team, age: age, number: number, experience: experience, weight: weight)
       player.save
     else
+
+
       player = Player.create(name: name, position: position,
                 team: team, age: age, number: number, experience: experience, weight: weight)
     end
 
-    if(experience!= nil && experience != 0)
+    if(experience!= nil && experience != 1)
+
+
       self.parse_seasons(page, player)
     end
 
@@ -91,49 +112,92 @@ module Populator
     rescue
       return
     end
-    receiving_table = self.get_receiving_table(tables).css('tr.oddrow, tr.evenrow')
-    passing_table = self.get_passing_table(tables).css('tr.oddrow, tr.evenrow')
+    begin
+      receiving_table = self.get_receiving_table(tables).css('tr.oddrow, tr.evenrow')
+    rescue
+    end
+    begin
+      passing_table = self.get_passing_table(tables).css('tr.oddrow, tr.evenrow')
+    rescue
+    end
 
 
-
-    (0..rushing_table.size-1).each do |i|
+    the_table = rushing_table
+    if(player.position == 'TE' || player.position == 'WR')
+      the_table = receiving_table
+    end
+    (0..the_table.size-1).each do |i|
       fumbles = 0
-      rush_row = rushing_table[i].css('td')
+      begin
+        rush_row = rushing_table[i].css('td')
+      rescue
+      end
       begin
         rec_row = receiving_table[i].css('td')
       rescue
       end
-      pass_row = passing_table[i].css('td')
-
-      year = rush_row[0].text.to_i
-      team = rush_row[1].css('a').text
-      gp = rush_row[2].text.to_i
-
-      rush_att = rush_row[3].text.to_i
-      rush_yards = rush_row[4].text.gsub(',', '').to_i
-      rush_avg = rush_row[5].text.to_f
-      rush_td = rush_row[7].text.to_i
-      fumbles += rush_row[10].text.to_i
-
       begin
-        receptions = rec_row[3].text.to_i
-        targets = rec_row[4].text.to_i
-        rec_yards = rec_row[5].text.gsub(',', '').to_i
-        rec_avg = rec_row[6].text.to_f
-        rec_td = rec_row[8].text.to_i
-        fumbles += rec_row[11].text.to_i
+        pass_row = passing_table[i].css('td')
       rescue
       end
 
-      pass_attempts = pass_row[4].text.to_i
-      pass_complete = pass_row[3].text.to_i
-      complete_pct  = pass_row[5].text.to_f
-      pass_yards  = pass_row[6].text.gsub(',', '').to_i
-      pass_avg  = pass_row[7].text.to_f
-      pass_td = pass_row[8].text.to_i
-      interceptions = pass_row[10].text.to_i
-      fumbles += pass_row[11].text.to_i
-      rating = pass_row[13].text.to_f
+      the_table_row = the_table[i].css('td')
+
+      begin
+        year = the_table_row[0].text.to_i
+        team = the_table_row[1].css('a').text
+        gp = the_table_row[2].text.to_i
+      rescue
+        year = rec_row[0].text.to_i
+        team = rec_row[1].css('a').text
+        gp = rec_row[2].text.to_i
+      end
+
+      begin
+        rush_att = rush_row[3].text.to_i
+        rush_yards = rush_row[4].text.gsub(',', '').to_i
+        rush_avg = rush_row[5].text.to_f
+        rush_td = rush_row[7].text.to_i
+        fumbles += rush_row[10].text.to_i
+      rescue
+        rush_att = 0
+        rush_yards = 0
+        rush_avg = 0
+        rush_td = 0
+        fumbles += 0
+      end
+
+      begin
+        receptions = 0
+        targets = 0
+        rec_yards = 0
+        rec_avg = 0
+        rec_td = 0
+        fumbles += 0
+      rescue
+      end
+
+      begin
+        pass_attempts = pass_row[4].text.to_i
+        pass_complete = pass_row[3].text.to_i
+        complete_pct  = pass_row[5].text.to_f
+        pass_yards  = pass_row[6].text.gsub(',', '').to_i
+        pass_avg  = pass_row[7].text.to_f
+        pass_td = pass_row[8].text.to_i
+        interceptions = pass_row[10].text.to_i
+        fumbles += pass_row[11].text.to_i
+        rating = pass_row[13].text.to_f
+      rescue
+        pass_attempts = 0
+        pass_complete = 0
+        complete_pct  = 0
+        pass_yards  = 0
+        pass_avg  = 0
+        pass_td = 0
+        interceptions = 0
+        fumbles += 0
+        rating = 0
+      end
 
       total_points = (rush_yards.to_f / 10) + (rush_td.to_f * 6) +
                      (rec_yards.to_f / 10) + (rec_td.to_f * 6) +
