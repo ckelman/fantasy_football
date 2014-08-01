@@ -14,7 +14,8 @@ class Player < ActiveRecord::Base
 
   #used to easily get a player
   def self.get(input)
-    where{name =~ ("%#{input}%")}.first
+    player  = where{name =~ ("%#{input}%")}
+    player.nil? ? nil : player.first
   end
 
   #gets a list of all palyers that match input
@@ -24,7 +25,7 @@ class Player < ActiveRecord::Base
 
   #standardizes players positions
   def self.standardize_positions
-    where{position =~ ("%#{running}%")}.each do |pl|
+    where{position =~ ("%#{back}%")}.each do |pl|
       pl.update_attributes(position: 'RB')
     end
 
@@ -108,7 +109,7 @@ class Player < ActiveRecord::Base
     seasons.sort_by{|s| -s[:year]}.first
   end
 
-  # calculates the players average production compared to league average
+  # calculates the players average production compared to league average of that age
   #returns a multiplier
   def average_point_pct
       if(position == 'QB')
@@ -162,11 +163,11 @@ class Player < ActiveRecord::Base
       if(position == 'QB')
         average_point_pct * Analyzer::QB.points_by_exp(experience)
       elsif(position == 'RB')
-        average_point_pct * Analyzer::RB.points_by_exp(experience) + 3*16
+        average_point_pct * Analyzer::RB.points_by_exp(experience)
       elsif(position == 'WR')
-        average_point_pct * Analyzer::WR.points_by_age(experience)
+        average_point_pct * Analyzer::WR.points_by_exp(experience)
       elsif(position == 'TE')
-        average_point_pct * Analyzer::TE.points_by_age(experience)
+        average_point_pct * Analyzer::TE.points_by_exp(experience)
       else
         return last_season.total_points
       end
@@ -183,7 +184,7 @@ class Player < ActiveRecord::Base
       if(position == 'QB')
         (average_cop_pct_exp * Analyzer::QB.cop_by_exp(experience)) + last_season.total_points* 16 / last_season.games_played
       elsif(position == 'RB')
-        (average_cop_pct_exp * Analyzer::RB.cop_by_exp(experience)) + last_season.total_points* 16 / last_season.games_played + 3*16
+        (average_cop_pct_exp * Analyzer::RB.cop_by_exp(experience)) + last_season.total_points* 16 / last_season.games_played
       elsif(position == 'WR')
         (average_cop_pct_exp * Analyzer::WR.cop_by_exp(experience)) + last_season.total_points* 16 / last_season.games_played
       elsif(position == 'TE')
