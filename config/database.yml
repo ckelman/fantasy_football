@@ -19,7 +19,7 @@ development:
   database: appname_development
   pool: 5
   timeout: 5000
-  username: postgres
+  username: charlie
   password:
 
 test:
@@ -28,5 +28,5 @@ test:
   database: appname_test
   pool: 5
   timeout: 5000
-  username: postgres
+  username: charlie
   password:
