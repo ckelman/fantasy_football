@@ -42,6 +42,7 @@ module Populator
     Player.standardize_positions
     Season.set_all
     Player.calc_all_projected_points
+    Player.set_actives
   end
 
 
