@@ -27,5 +27,28 @@ module Analyzer
     def self.avg_points
       Analyzer.avg_points_h('RB')
     end
+
+
+
+      def usage(inp_weight, inp_touches)
+        seasons = []
+        total = 0
+        players = Player.where{weight <= inp_weight}
+
+        players.each do |player|
+          player.seasons.where{rush_attempts + receptions >= inp_touches}.each do |season|
+            seasons << season if season.next != nil
+          end
+        end
+
+        seasons.each do |season|
+          total += season.next.change_from_last
+        end
+
+        total/seasons.size
+      end
+
+
+
   end
 end

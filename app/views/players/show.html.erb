@@ -1,0 +1,16 @@
+<h1><%=@player.name%></h1>
+<h2><%=@player.position%>, <%=@player.team%></h2>
+
+<h2><%=@player.age%> years old, Year <%=@player.experience%></h2>
+
+<h3><%=@player.weight%> lbs</h3>
+
+<h3><%=@player.average_points%> pts/year : <%=(@player.average_points/16).round(1)%> pts/game</h3>
+
+</br>
+<h2>Projected Points: <%=@player.projected_points%> (<%=@player.projected_ppg%>/game)</h2>
+</br>
+
+<%@player.org_seasons.each do |season|%>
+<p><%= link_to season.year, season %><p>
+<%end%>

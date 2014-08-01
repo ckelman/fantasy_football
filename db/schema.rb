@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140731151116) do
+ActiveRecord::Schema.define(version: 20140801201210) do
 
   create_table "players", force: true do |t|
     t.string   "name"
@@ -23,6 +23,8 @@ ActiveRecord::Schema.define(version: 20140731151116) do
     t.datetime "updated_at"
     t.string   "number"
     t.integer  "weight"
+    t.boolean  "active"
+    t.float    "projected_points"
   end
 
   create_table "seasons", force: true do |t|

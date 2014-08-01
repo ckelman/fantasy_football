@@ -1,0 +1,41 @@
+  <div class="row">
+
+    <div id="rb-col" class="col-sm-3">
+      <ol>
+
+        <% @rbs.each do |player| %>
+          <li>
+            <%=link_to player.name, player%> (<%=player.position%>): <%=player.projected_ppg%>
+          </li>
+        <%end%>
+
+      </ol>
+    </div>
+
+    <div id="qb-col" class="col-sm-3">
+      <ol>
+
+        <% @qbs.each do |player| %>
+          <li>
+            <%=link_to player.name, player%> (<%=player.position%>): <%=player.projected_ppg%>
+          </li>
+        <%end%>
+
+      </ol>
+    </div>
+
+    <div id="wr-col" class="col-sm-3">
+      <ol>
+
+        <% @wrs.each do |player| %>
+          <li>
+            <%=link_to player.name, player%> (<%=player.position%>): <%=player.projected_ppg%>
+          </li>
+        <%end%>
+
+      </ol>
+    </div>
+
+
+
+  </div>

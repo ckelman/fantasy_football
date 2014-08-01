@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>FantasyFootball</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+  <head>
+    <title>FantasyFootball</title>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
 
-<%= yield %>
+    <div class="container">
 
-</body>
+      <%= form_tag(action: "find_player", controller:'players', method: :post) do %>
+        <%= label_tag(:q, "Search for player:") %>
+        <%= text_field_tag(:q) %>
+        <%= submit_tag("Search") %>
+      <% end %>
+
+      <%=link_to 'Home', players_path, class: "btn btn-primary btn-md"%>
+
+
+    <%= yield %>
+
+    </div>
+  </body>
 </html>

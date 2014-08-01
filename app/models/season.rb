@@ -7,6 +7,17 @@ class Season < ActiveRecord::Base
     Season.where{total_points - my_points > 50 || total_points - my_points < 50}
   end
 
+
+  def next
+    myYear = year
+    player.seasons.where{year - myYear == 1}.first
+  end
+
+  def prev
+    myYear = year
+    player.seasons.where{year - myYear == -1}.first
+  end
+
   def self.set_all
     self.set_all_ages
     self.set_all_experiences
@@ -52,7 +63,7 @@ class Season < ActiveRecord::Base
     else
       seasons.each do |season|
         if(year - season.year == 1)
-          update_attributes(change_from_last: total_points / season.total_points)
+          update_attributes(change_from_last: (total_points*16/games_played)/ (season.total_points*16/season.games_played))
           return
         end
       end
@@ -77,12 +88,17 @@ class Season < ActiveRecord::Base
 
 
   def set_experience
-    seasons = player.seasons.sort_by{|s| -s[:year]}
+    seasons = player.seasons.sort_by{|s| s[:year]}
     (0..seasons.size-1).each do |i|
-      if(seasons[i].year == year && player.experience != nil)
-        update_attributes(experience: player.experience - ( Time.now.year - year))
+      # if(seasons[i].year == year && player.experience != nil && player.experience != 0)
+      #   update_attributes(experience: player.experience - ( Time.now.year - year))
+      #   return
+      # elsif(seasons[i].year == year)
+      if(seasons[i].year == year)
+        update_attributes(experience: i+1)
         return
       end
+      # end
     end
     update_attributes(experience: nil)
   end

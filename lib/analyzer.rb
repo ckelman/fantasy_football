@@ -18,7 +18,7 @@ module Analyzer
       return nil
     end
     seasons.each do |season|
-      total += season.change_from_last
+      total += season.change_from_last 
     end
     total/seasons.size
   end

@@ -1,6 +1,19 @@
 module Populator
 
   def self.populate
+    # [
+    #   'http://espn.go.com/fantasy/football/story/_/page/FFLranks14top300/2014-fantasy-football-rankings-preseason-top-300',
+    #   'http://espn.go.com/fantasy/football/story/_/page/2013preseasonFFLranks250/top-300-position',
+    #   'http://sports.espn.go.com/fantasy/football/ffl/story?page=NFLDK2K12ranksTop300'
+    # ].each do |page|
+    #   self.populate_from_list_page(page)
+    # end
+
+    self.populate_stats_pages
+
+  end
+
+  def self.populate_fantasy_pages
     [
       'http://espn.go.com/fantasy/football/story/_/page/FFLranks14top300/2014-fantasy-football-rankings-preseason-top-300',
       'http://espn.go.com/fantasy/football/story/_/page/2013preseasonFFLranks250/top-300-position',
@@ -13,12 +26,38 @@ module Populator
     Season.set_all
   end
 
-  def self.populate_2014
-    self.populate_from_list_page('http://espn.go.com/fantasy/football/story/_/page/FFLranks14top300/2014-fantasy-football-rankings-preseason-top-300')
+  def self.populate_stats_pages
+
+    ['rushing','receiving','passing'].each do |style|
+      (2002..2013).each do |year|
+        self.populate_from_list_stats('http://espn.go.com/nfl/statistics/player/_/stat/'+style+'/year/'+year.to_s)
+
+        #second page for receiving + rushing
+        if(style == 'receiving')
+          self.populate_from_list_stats('http://espn.go.com/nfl/statistics/player/_/stat/' + style + '/sort/' + style + 'Yards/year/'+ (year.to_s) +'/qualified/false/count/41')
+        end
+      end
+    end
+
+    Player.standardize_positions
+    Season.set_all
+    Player.calc_all_projected_points
   end
+
 
   def self.populate_from_list_page(list_page)
     self.get_player_links(list_page).each do |link|
+      puts "\n************************************************\n" + link +
+      "\n************************************************\n"
+      begin
+      self.parse_player(link)
+      rescue
+      end
+    end
+  end
+
+  def self.populate_from_list_stats(list_page)
+    self.get_player_links_stats(list_page).each do |link|
       puts "\n************************************************\n" + link +
       "\n************************************************\n"
       begin
@@ -32,9 +71,27 @@ module Populator
     nodes = Nokogiri::HTML(HTTParty.get(url).body).css('tr.last')
     links = []
     nodes.each do |node|
-      link = node.css('a')[0]['href'].split('\'')[1].gsub('/player', '/player/stats')
-      next if link =~ /team/i
-      links << URI.encode(link)
+      link = node.css('a')[0]['href'].split('\'')[1]
+      if(link =~ /fantasy/)
+        page = Nokogiri::HTML(HTTParty.get(link).body)
+        link = 'http://espn.go.com' + page.css('#content > div.mod-page-tabs.mod-pagenav-tabs > ul > li:nth-child(2) > a').first
+      else
+        link = link.gsub('/player', '/player/stats')
+        next if link =~ /team/i
+        links << URI.encode(link)
+      end
+
+    end
+    links
+  end
+
+  def self.get_player_links_stats(url)
+    page = Nokogiri::HTML(HTTParty.get(url).body).css('#my-players-table > div > div.mod-content > table')
+    nodes = page.css('tr.oddrow, tr.evenrow')
+    links = []
+    nodes.each do |node|
+      link = node.css('a')[0]['href'].gsub('/player', '/player/stats')
+      links << link
     end
     links
   end
@@ -56,7 +113,10 @@ module Populator
 
     number = bio.css('.general-info li:first-child').text.split(' ')[0].strip
 
-    position = bio.css('.general-info li:first-child').text.split(' ')[1].strip
+    begin
+      position = bio.css('.general-info li:first-child').text.split(' ')[1].strip
+    rescue
+    end
 
 
     begin
@@ -65,12 +125,14 @@ module Populator
     end
 
 
-
-    experience = bio.css('.player-metadata li:nth-child(3)').text.strip
-    if (experience =~ /rookie/i)
-      experience = 1
-    else
-      experience = experience.split(' ')[0].split('Experience')[1].to_i
+    begin
+      experience = bio.css('.player-metadata li:nth-child(3)').text.strip
+      if (experience =~ /rookie/i)
+        experience = 1
+      else
+        experience = experience.split(' ')[0].split('Experience')[1].to_i
+      end
+    rescue
     end
 
 
