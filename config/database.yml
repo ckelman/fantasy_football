@@ -10,3 +10,23 @@ default: &default
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
+
+
+
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: appname_development
+  pool: 5
+  timeout: 5000
+  username: postgres
+  password:
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: appname_test
+  pool: 5
+  timeout: 5000
+  username: postgres
+  password:
