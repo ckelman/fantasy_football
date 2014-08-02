@@ -5,10 +5,10 @@
 
 <h3><%=@player.weight%> lbs</h3>
 
-<h3><%=@player.average_points%> pts/year : <%=(@player.average_points/16).round(1)%> pts/game</h3>
+<h3><%=@player.average_points%> per year : <%=(@player.average_points/16).round(1)%> ppg</h3>
 
 </br>
-<h2>Projected Points: <%=@player.projected_points%> (<%=@player.projected_ppg%>/game)</h2>
+<h2>Projected Points: <%=@player.projected_points%> (<%=@player.projected_ppg%> ppg)</h2>
 </br>
 
 <%@player.org_seasons.each do |season|%>

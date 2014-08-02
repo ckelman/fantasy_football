@@ -1,4 +1,4 @@
-<h1><%=link_to @season.player.name, @season.player%>, <%=@season.year%></h1>
+<h1><%=link_to @season.player.name, @season.player%>,<%=@season.team%> <%=@season.year%></h1>
 <p>
 
   <% if @season.prev != nil %>
@@ -15,7 +15,7 @@
 
 </br>
 </br>
-<h1>Total Points:<%=@season.total_points%></h1>
+<h1>Total Points:<%=@season.total_points%> (<%=(@season.total_points/@season.games_played).round(1)%> ppg)</h1>
 <%if @season.change_from_last != nil%>
 <h3>Change from prior year (per game) (%): <%=(@season.change_from_last*100).round(1)%>%</h3>
 <%end%>
