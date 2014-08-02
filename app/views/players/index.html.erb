@@ -37,11 +37,13 @@
       <ol>
 
         <% @wrs.each do |player| %>
+
           <div class="row">
             <li>
               <span class="col-sm-7"><%=link_to player.name, player%> (<%=player.position%>):</span>  <span class="col-sm-5"><%=player.projected_points%> (<%=player.projected_ppg%> ppg) </span>
             </li>
             </div>
+            
         <%end%>
 
       </ol>

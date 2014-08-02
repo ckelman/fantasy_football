@@ -136,18 +136,40 @@ class Player < ActiveRecord::Base
 
   # calculates the players average production compared to league average of that age
   #returns a multiplier
-  def average_point_pct
+
+  #needs work.  Needs to compare individual seasons by age or exp
+  def average_point_pct_age
+    total = 0
+    my_seasons = seasons.where{(games_played >= 8) || (total_points >= 50)}
+    my_seasons.each do |season|
       if(position == 'QB')
-        average_points / Analyzer::QB.avg_points
+        total += season.ppg * 16 / Analyzer::QB.points_by_age(season.age)
       elsif(position == 'RB')
-        average_points / Analyzer::RB.avg_points
+        total += season.ppg * 16 / Analyzer::RB.points_by_age(season.age)
       elsif(position == 'WR')
-        average_points / Analyzer::WR.avg_points
+        total += season.ppg * 16 / Analyzer::WR.points_by_age(season.age)
       elsif(position == 'TE')
-        average_points / Analyzer::TE.avg_points
-      else
-        return nil
+        total += season.ppg * 16 / Analyzer::TE.points_by_age(season.age)
       end
+    end
+      total/my_seasons.size
+  end
+
+    def average_point_pct_exp
+    total = 0
+    my_seasons = seasons.where{(games_played >= 8) || (total_points >= 50)}
+    my_seasons.each do |season|
+      if(position == 'QB')
+        total += season.ppg * 16 / Analyzer::QB.points_by_exp(season.experience)
+      elsif(position == 'RB')
+        total += season.ppg * 16 / Analyzer::RB.points_by_exp(season.experience)
+      elsif(position == 'WR')
+        total += season.ppg * 16 / Analyzer::WR.points_by_exp(season.experience)
+      elsif(position == 'TE')
+        total += season.ppg * 16 / Analyzer::TE.points_by_exp(season.experience)
+      end
+    end
+      total/my_seasons.size
   end
 
   def self.calc_all_projected_points
@@ -156,11 +178,13 @@ class Player < ActiveRecord::Base
     end
   end
 
+
+  #once the overalls are fixed re add them to the calculations
   def calc_projected_points
     begin
       update_attributes(
         projected_points:
-        (((proj_points_overall_age + proj_points_overall_exp +
+        ((( proj_points_overall_age + proj_points_overall_exp +
           proj_points_change_age + proj_points_change_exp)/4).round(1))
       )
     rescue
@@ -175,16 +199,18 @@ class Player < ActiveRecord::Base
 
   #returns a projection for next year based on average_point_pct and league average
   #for players age
+
+  #needs work
   def proj_points_overall_age
     begin
       if(position == 'QB')
-        average_point_pct * Analyzer::QB.points_by_age(age)
+        average_point_pct_age * Analyzer::QB.points_by_age(age)
       elsif(position == 'RB')
-        average_point_pct * Analyzer::RB.points_by_age(age)
+        average_point_pct_age * Analyzer::RB.points_by_age(age)
       elsif(position == 'WR')
-        average_point_pct * Analyzer::WR.points_by_age(age)
+        average_point_pct_age * Analyzer::WR.points_by_age(age)
       elsif(position == 'TE')
-        average_point_pct * Analyzer::TE.points_by_age(age)
+        average_point_pct_age * Analyzer::TE.points_by_age(age)
       else
         return (last_season.total_points *2 + average_points) /3
       end
@@ -213,16 +239,18 @@ class Player < ActiveRecord::Base
 
   #returns a projection for next year based on average_point_pct and league average
   #for players experience
+
+  #needs work
   def proj_points_overall_exp
     begin
       if(position == 'QB')
-        average_point_pct * Analyzer::QB.points_by_exp(experience)
+        average_point_pct_exp * Analyzer::QB.points_by_exp(experience)
       elsif(position == 'RB')
-        average_point_pct * Analyzer::RB.points_by_exp(experience)
+        average_point_pct_exp * Analyzer::RB.points_by_exp(experience)
       elsif(position == 'WR')
-        average_point_pct * Analyzer::WR.points_by_exp(experience)
+        average_point_pct_exp * Analyzer::WR.points_by_exp(experience)
       elsif(position == 'TE')
-        average_point_pct * Analyzer::TE.points_by_exp(experience)
+        average_point_pct_exp * Analyzer::TE.points_by_exp(experience)
       else
         return (last_season.total_points*2 + average_points) /3
       end
@@ -237,13 +265,13 @@ class Player < ActiveRecord::Base
   def proj_points_change_exp
     begin
       if(position == 'QB')
-        (average_cop_pct_exp * Analyzer::QB.cop_by_exp(experience)) + last_season.total_points* 16 / last_season.games_played
+        (average_cop_pct_exp * Analyzer::QB.cop_by_exp(experience)) * last_season.total_points* 16 / last_season.games_played
       elsif(position == 'RB')
-        (average_cop_pct_exp * Analyzer::RB.cop_by_exp(experience)) + last_season.total_points* 16 / last_season.games_played
+        (average_cop_pct_exp * Analyzer::RB.cop_by_exp(experience)) * last_season.total_points* 16 / last_season.games_played
       elsif(position == 'WR')
-        (average_cop_pct_exp * Analyzer::WR.cop_by_exp(experience)) + last_season.total_points* 16 / last_season.games_played
+        (average_cop_pct_exp * Analyzer::WR.cop_by_exp(experience)) * last_season.total_points* 16 / last_season.games_played
       elsif(position == 'TE')
-        (average_cop_pct_exp * Analyzer::TE.cop_by_exp(experience)) + last_season.total_points* 16 / last_season.games_played
+        (average_cop_pct_exp * Analyzer::TE.cop_by_exp(experience)) * last_season.total_points* 16 / last_season.games_played
       else
         return (last_season.total_points*2 + average_points) /3
       end

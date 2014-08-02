@@ -7,6 +7,10 @@ class Season < ActiveRecord::Base
     Season.where{total_points - my_points > 50 || total_points - my_points < 50}
   end
 
+  def ppg
+    total_points / games_played
+  end
+
 
   def next
     myYear = year
