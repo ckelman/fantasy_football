@@ -11,6 +11,8 @@
 <h2>Projected Points: <%=@player.projected_points%> (<%=@player.projected_ppg%> ppg)</h2>
 </br>
 
+<h1>Seasons</h1>
+
 <%@player.org_seasons.each do |season|%>
 <p><%= link_to season.year, season %><p>
 <%end%>

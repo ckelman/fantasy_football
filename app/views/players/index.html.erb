@@ -3,36 +3,36 @@
   <h1 class=text-center>Current Projections</h1>
   </br>
 
-    <div id="rb-col" class="col-sm-3 col-sm-offset-2">
+    <div id="rb-col" class="col-sm-4 col-sm-offset-0">
       <ol>
 
         <% @rbs.each do |player| %>
           <li>
-            <%=link_to player.name, player%> (<%=player.position%>): <%=player.projected_ppg%>
+            <%=link_to player.name, player%> (<%=player.position%>):  <%=player.projected_points%> (<%=player.projected_ppg%>) ppg
           </li>
         <%end%>
 
       </ol>
     </div>
 
-    <div id="qb-col" class="col-sm-3">
+    <div id="qb-col" class="col-sm-4">
       <ol>
 
         <% @qbs.each do |player| %>
           <li>
-            <%=link_to player.name, player%> (<%=player.position%>): <%=player.projected_ppg%>
+             <%=link_to player.name, player%> (<%=player.position%>):  <%=player.projected_points%> (<%=player.projected_ppg%>) ppg
           </li>
         <%end%>
 
       </ol>
     </div>
 
-    <div id="wr-col" class="col-sm-3">
+    <div id="wr-col" class="col-sm-4">
       <ol>
 
         <% @wrs.each do |player| %>
           <li>
-            <%=link_to player.name, player%> (<%=player.position%>): <%=player.projected_ppg%>
+             <%=link_to player.name, player%> (<%=player.position%>):  <%=player.projected_points%> (<%=player.projected_ppg%>) ppg
           </li>
         <%end%>
 
