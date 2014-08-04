@@ -66,7 +66,7 @@ class Season < ActiveRecord::Base
       update_attributes(change_from_last: nil)
     else
       seasons.each do |season|
-        if(year - season.year == 1)
+        if(year - season.year == 1 && season.total_points >=50)
           update_attributes(change_from_last: (total_points*16/games_played)/ (season.total_points*16/season.games_played))
           return
         end

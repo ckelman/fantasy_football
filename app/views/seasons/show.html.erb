@@ -1,54 +1,53 @@
-<h1><%=link_to @season.player.name, @season.player%>,<%=@season.team%> <%=@season.year%></h1>
-<p>
+<div class="container">
+  <h1><%=link_to @season.player.name, @season.player%> - <%=@season.team%>, <%=@season.year%></h1>
+  <h2>Year <%=@season.experience%>, <%=@season.age%> years old</h2>
+  <h4>
 
-  <% if @season.prev != nil %>
-  Previous: <%=link_to @season.prev.year, @season.prev%>
-  <% end%>
+    <% if @season.prev != nil %>
+    Previous: <%=link_to @season.prev.year, @season.prev%>
+    <% end%>
 
-  <% if @season.next != nil %>
-  Next: <%=link_to @season.next.year, @season.next%>
-  <% end%>
+    <% if @season.next != nil %>
+    Next: <%=link_to @season.next.year, @season.next%>
+    <% end%>
 
-</p>
-<h2>Year <%=@season.experience%>, <%=@season.age%> years old</h2>
+  </h4>
+
+  <h1>Total Points:<%=@season.total_points%> (<%=(@season.total_points/@season.games_played).round(1)%> ppg)</h1>
+  <%if @season.change_from_last != nil%>
+  <h3>Change from prior year (per game) (%): <%=(@season.change_from_last*100).round(1)%>%</h3>
+  <%end%>
+
+  <h3>Games Played:<%=@season.games_played%></h3>
+  <h3></h3>
+
+  <div class="row">
+
+    <div class="col-sm-4">
+      <h3>Rushing Yards: <%=@season.rush_yards%></h3>
+      <h3>Rushing TDs: <%=@season.rush_td%></h3>
+      <h3>Rushing Attempts: <%=@season.rush_attempts%></h3>
+      <h3>YPC: <%=@season.rush_avg%></h3>
+    </div>
+
+    <div class="col-sm-4">
+      <h3>Receiving Yards: <%=@season.rec_yards%></h3>
+      <h3>Receiving TDs: <%=@season.rec_td%></h3>
+      <h3>Receiving Attempts: <%=@season.receptions%></h3>
+      <h3>YPC: <%=@season.rec_avg%></h3>
+    </div>
+
+    <div class="col-sm-4">
+      <h3>Passing Yards: <%=@season.pass_yards%></h3>
+      <h3>Passing TDs: <%=@season.pass_td%></h3>
+      <h3>Interceptions: <%=@season.interceptions%></h3>
+      <h3>Passing Attempts: <%=@season.pass_attempts%></h3>
+      <h3>Passes Completed: <%=@season.pass_complete%></h3>
+      <h3>YPP: <%=@season.pass_avg%></h3>
+    </div>
 
 
-</br>
-</br>
-<h1>Total Points:<%=@season.total_points%> (<%=(@season.total_points/@season.games_played).round(1)%> ppg)</h1>
-<%if @season.change_from_last != nil%>
-<h3>Change from prior year (per game) (%): <%=(@season.change_from_last*100).round(1)%>%</h3>
-<%end%>
-</br>
-</br>
+  </div>
 
-<h3>Games Played:<%=@season.games_played%></h3>
-<h3>Fumbles:<%=@season.fumbles%></h3>
 
-</br>
-</br>
-
-<h3>Rushing Yards: <%=@season.rush_yards%></h3>
-<h3>Rushing TDs: <%=@season.rush_td%></h3>
-<h3>Rushing Attempts: <%=@season.rush_attempts%></h3>
-<h3>YPC: <%=@season.rush_avg%></h3>
-</br>
-</br>
-
-<h3>Receiving Yards: <%=@season.rec_yards%></h3>
-<h3>Receiving TDs: <%=@season.rec_td%></h3>
-<h3>Receiving Attempts: <%=@season.receptions%></h3>
-<h3>YPC: <%=@season.rec_avg%></h3>
-
-</br>
-</br>
-
-<h3>Passing Yards: <%=@season.pass_yards%></h3>
-<h3>Passing TDs: <%=@season.pass_td%></h3>
-<h3>Interceptions: <%=@season.interceptions%></h3>
-<h3>Passing Attempts: <%=@season.pass_attempts%></h3>
-<h3>Passes Completed: <%=@season.pass_complete%></h3>
-<h3>YPP: <%=@season.pass_avg%></h3>
-
-</br>
-</br>
+</div>

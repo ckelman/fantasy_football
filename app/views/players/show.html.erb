@@ -1,18 +1,81 @@
-<h1><%=@player.name%></h1>
-<h2><%=@player.position%>, <%=@player.team%></h2>
+<div class="container">
+    <h1><%=@player.name%> - <%=@player.position%>, <%=@player.team%></h1>
 
-<h2><%=@player.age%> years old, Year <%=@player.experience%></h2>
+    <h3><%=@player.age%> years old, <%=@player.weight%> lbs, Year <%=@player.experience%></h3>
 
-<h3><%=@player.weight%> lbs</h3>
+  </br>
 
-<h3><%=@player.average_points%> per year : <%=(@player.average_points/16).round(1)%> ppg</h3>
+    <h1>Fantasy Points</h1>
 
-</br>
-<h2>Projected Points: <%=@player.projected_points%> (<%=@player.projected_ppg%> ppg)</h2>
-</br>
+    <h3>Career Averages: <%=@player.average_points%> per year : <%=(@player.average_points/16).round(1)%> ppg</h3>
 
-<h1>Seasons</h1>
+    </br>
+    <h2>Projections: <%=@player.projected_points%> (<%=@player.projected_ppg%> ppg)</h2>
 
-<%@player.org_seasons.each do |season|%>
-<p><%= link_to season.year, season %><p>
-<%end%>
+      <div class="row">
+
+        <div class="col-sm-5">
+          <div class=" panel panel-info">
+            <div class="panel-heading">
+              <h3 class="text-center panel-title">Based on overall production and age</h3>
+            </div>
+            <div class="panel-body">
+             <h4 class="text-center"><%=@poa%> points</h4>
+             <h4 class="text-center"><%=(@poa/16).round(1)%> ppg</h4>
+           </div>
+         </div>
+        </div>
+
+      <div class="col-sm-6">
+        <div class=" panel panel-info">
+          <div class="panel-heading">
+            <h3 class="text-center panel-title">Based on overall production and experience</h3>
+          </div>
+          <div class="panel-body">
+           <h4 class="text-center"><%=@poe%> points</h4>
+           <h4 class="text-center"><%=(@poe/16).round(1)%> ppg</h4>
+         </div>
+       </div>
+      </div>
+
+
+        <div class="col-sm-5">
+          <div class=" panel panel-info">
+            <div class="panel-heading">
+              <h3 class="text-center panel-title">Based on last year's production and age</h3>
+            </div>
+            <div class="panel-body">
+             <h4 class="text-center"><%=@pca%> points</h4>
+             <h4 class="text-center"><%=(@pca/16).round(1)%> ppg</h4>
+           </div>
+         </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class=" panel panel-info">
+            <div class="panel-heading">
+              <h3 class="text-center panel-title">Based on last year's production and experience</h3>
+            </div>
+            <div class="panel-body">
+             <h4 class="text-center"><%=@pce%> points</h4>
+             <h4 class="text-center"><%=(@pce/16).round(1)%> ppg</h4>
+           </div>
+         </div>
+        </div>
+
+      </div>
+    </br>
+
+  </br>
+
+    <h1>Seasons</h1>
+    <div class="row">
+      <ul>
+        <%@player.org_seasons.each do |season|%>
+          <div class="col-sm-1">
+            <h4><%= link_to season.year, season %></h4>
+          </div>
+        <%end%>
+      </ul>
+    </div>
+</div>

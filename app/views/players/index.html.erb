@@ -1,54 +1,27 @@
   <div class="row">
-
-  <h1 class=text-center>Current Projections</h1>
+    <h1 class=text-center>Current Projections</h1>
   </br>
-
     <div id="rb-col" class="col-sm-4 col-sm-offset-0">
-      <ol>
-
         <% @rbs.each do |player| %>
-          
           <div class="row">
-            <li>
-              <span class="col-sm-7"><%=link_to player.name, player%> (<%=player.position%>):</span>  <span class="col-sm-5"><%=player.projected_points%> (<%=player.projected_ppg%> ppg) </span>
-            </li>
-            </div>
-          
+              <span class="col-sm-7"><%=(@count+=1)%>. <%=link_to player.name, player%> (<%=player.position%>)</span>  <span class="col-sm-5"><%=player.projected_points%> (<%=player.projected_ppg%> ppg) </span>
+          </div>
         <%end%>
-
-      </ol>
     </div>
-
     <div id="qb-col" class="col-sm-4">
-      <ol>
-
+      <%@count = 0%>
         <% @qbs.each do |player| %>
           <div class="row">
-            <li>
-              <span class="col-sm-7"><%=link_to player.name, player%> (<%=player.position%>):</span>  <span class="col-sm-5"><%=player.projected_points%> (<%=player.projected_ppg%> ppg) </span>
-            </li>
+              <span class="col-sm-7"><%=(@count+=1)%>. <%=link_to player.name, player%> (<%=player.position%>)</span>  <span class="col-sm-5"><%=player.projected_points%> (<%=player.projected_ppg%> ppg) </span>
             </div>
         <%end%>
-
-      </ol>
     </div>
-
     <div id="wr-col" class="col-sm-4">
-      <ol>
-
+      <%@count = 0%>
         <% @wrs.each do |player| %>
-
           <div class="row">
-            <li>
-              <span class="col-sm-7"><%=link_to player.name, player%> (<%=player.position%>):</span>  <span class="col-sm-5"><%=player.projected_points%> (<%=player.projected_ppg%> ppg) </span>
-            </li>
+              <span class="col-sm-7"><%=(@count+=1)%>. <%=link_to player.name, player%> (<%=player.position%>)</span>  <span class="col-sm-5"><%=player.projected_points%> (<%=player.projected_ppg%> ppg) </span>
             </div>
-            
         <%end%>
-
-      </ol>
     </div>
-
-
-
   </div>

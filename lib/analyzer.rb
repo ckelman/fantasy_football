@@ -18,14 +18,14 @@ module Analyzer
       return nil
     end
     seasons.each do |season|
-      total += season.change_from_last 
+      total += season.change_from_last
     end
     total/seasons.size
   end
 
   def self.points_by_age_h(inp_position, inp_age)
     total = 0
-    seasons = Season.where{position == inp_position }.where{age == inp_age}.where{change_from_last != nil}
+    seasons = Season.where{position == inp_position }.where{age == inp_age}.where{(games_played >= 8) | (total_points >= 50)}
     if(seasons.size == 0)
       return nil
     end
@@ -37,7 +37,7 @@ module Analyzer
 
   def self.points_by_exp_h(inp_position, inp_exp)
     total = 0
-    seasons = Season.where{position == inp_position }.where{experience == inp_exp}.where{change_from_last != nil}
+    seasons = Season.where{position == inp_position }.where{experience == inp_exp}.where{(games_played >= 8) | (total_points >= 50)}
     if(seasons.size == 0)
       return nil
     end

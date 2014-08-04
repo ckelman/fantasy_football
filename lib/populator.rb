@@ -45,6 +45,24 @@ module Populator
     Player.set_actives
   end
 
+  def self.populate_stats_qb
+    ['passing'].each do |style|
+      (2002..2013).each do |year|
+        self.populate_from_list_stats('http://espn.go.com/nfl/statistics/player/_/stat/'+style+'/year/'+year.to_s)
+
+        #second page for receiving + rushing
+        if(style == 'receiving')
+          self.populate_from_list_stats('http://espn.go.com/nfl/statistics/player/_/stat/' + style + '/sort/' + style + 'Yards/year/'+ (year.to_s) +'/qualified/false/count/41')
+        end
+      end
+    end
+
+    Player.standardize_positions
+    Season.set_all
+    Player.calc_all_projected_points
+    Player.set_actives
+  end
+
 
   def self.populate_from_list_page(list_page)
     self.get_player_links(list_page).each do |link|
@@ -188,6 +206,8 @@ module Populator
     the_table = rushing_table
     if(player.position == 'TE' || player.position == 'WR')
       the_table = receiving_table
+    elsif(player.position == 'QB')
+      the_table = passing_table
     end
     (0..the_table.size-1).each do |i|
       fumbles = 0
