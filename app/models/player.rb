@@ -174,6 +174,7 @@ class Player < ActiveRecord::Base
 
   def self.calc_all_projected_points
     all.each do |player|
+      p player.name
       player.calc_projected_points
     end
   end
