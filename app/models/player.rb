@@ -65,7 +65,7 @@ class Player < ActiveRecord::Base
   end
 
   def set_active
-    update_attributes(active: org_seasons.last== nil || org_seasons.last.year == 2013)
+    update_attributes(active: org_seasons.last== nil || org_seasons.last.year == 2014)
   end
 
   #computes a players average points multiplier

@@ -18,17 +18,17 @@ default: &default
 development:
   adapter: postgresql
   encoding: unicode
-  database: appname_development
+  database: fantasy_football_development
   pool: 5
   timeout: 5000
-  username: charlie
-  password:
+  username: ckelman
+  password: password
 
 test:
   adapter: postgresql
   encoding: unicode
-  database: appname_test
+  database: fantasy_football_test
   pool: 5
   timeout: 5000
-  username: charlie
-  password:
+  username: ckelman
+  password: password
