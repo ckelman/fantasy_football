@@ -1,4 +1,16 @@
-<div class="container">
+<script>
+  $(document).ready(function() {
+    new Chartkick.LineChart("chart-1",[ {"name":"Points",
+            "data":{
+              <%@player.org_seasons.each do |season|%>
+                "<%=season.year%>": <%=season.total_points%>,
+              <%end%>
+            }
+            }]);
+  });
+</script>
+
+<div class="container player-show">
     <h1><%=@player.name%> - <%=@player.position%>, <%=@player.team%></h1>
 
     <h3><%=@player.age%> years old, <%=@player.weight%> lbs, Year <%=@player.experience%></h3>
@@ -68,14 +80,144 @@
 
   </br>
 
-    <h1>Seasons</h1>
-    <div class="row">
-      <ul>
+  <div id="chart-1"></div>
+
+  <h1>Fantasy Point Breakdown</h1>
+
+     <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Games Played</th>
+            <th>Points</th>
+            <th>Points/Game</th>
+
+            <th>Rushing Yards</th>
+            <th>Rushing TD's</th>
+
+            <th>Receiving Yards</th>
+            <th>Receiving TD's</th>
+
+            <th>Passing Yards</th>
+            <th>Passing TD's</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          <%@player.org_seasons.each do |season|%>
+           <tr>
+            <td><%=season.year%></td>
+            <td><%=season.games_played%></td>
+
+            <td><%= season.total_points %></td>
+             <td><%=(season.total_points/season.games_played).round(1)%></td>
+
+            <td><%= (season.rush_yards/10/season.total_points*100).round(1) %>%</td>
+            <td><%= (season.rush_td*6/season.total_points*100).round(1) %>%</td>
+
+             <td><%= (season.rec_yards/10/season.total_points*100).round(1) %>%</td>
+            <td><%= (season.rec_td*6/season.total_points*100).round(1) %>%</td>
+
+            <td><%= (season.pass_yards/10/season.total_points*100).round(1) %>%</td>
+            <td><%= (season.pass_td*6/season.total_points*100).round(1) %>%</td>
+          </tr>
+        <%end%>
+         
+        </tbody>
+      </table>
+
+    <h1>Rushing</h1>
+
+     <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Games Played</th>
+            <th>Rushing Yards</th>
+            <th>Rushing Attempts</th>
+            <th>Rushing TD's</th>
+            <th>YPC</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%@player.org_seasons.each do |season|%>
+           <tr>
+            <td><%=season.year%></td>
+            <td><%=season.games_played%></td>
+            <td><%=season.rush_yards%></td>
+            <td><%=season.rush_attempts%></td>
+            <td><%=season.rush_td%></td>
+            <td><%=season.rush_avg%></td>
+          </tr>
+        <%end%>
+         
+        </tbody>
+      </table>
+
+
+      <h1>Receiving</h1>
+
+     <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Games Played</th>
+            <th>Receiving Yards</th>
+            <th>Receiving Attempts</th>
+            <th>Receiving TD's</th>
+            <th>YPC</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%@player.org_seasons.each do |season|%>
+           <tr>
+            <td><%=season.year%></td>
+            <td><%=season.games_played%></td>
+            <td><%=season.rec_yards%></td>
+            <td><%=season.receptions%></td>
+            <td><%=season.rec_td%></td>
+            <td><%=season.rec_avg%></td>
+          </tr>
+        <%end%>
+         
+        </tbody>
+      </table>
+
+
+      <h1>Passing</h1>
+
+     <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Games Played</th>
+            <th>Passing Yards</th>
+            <th>Passing Attempts</th>
+            <th>Passes Completed</th>
+            <th>Passing TD's</th>
+            <th>YPP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%@player.org_seasons.each do |season|%>
+           <tr>
+            <td><%=season.year%></td>
+            <td><%=season.games_played%></td>
+            <td><%=season.pass_yards%></td>
+            <td><%=season.pass_attempts%></td>
+            <td><%=season.pass_complete%></td>
+            <td><%=season.pass_td%></td>
+            <td><%=season.pass_avg%></td>
+          </tr>
+        <%end%>
+         
+        </tbody>
+      </table>
+
         <%@player.org_seasons.each do |season|%>
           <div class="col-sm-1">
             <h4><%= link_to season.year, season %></h4>
           </div>
         <%end%>
-      </ul>
-    </div>
+    
 </div>
