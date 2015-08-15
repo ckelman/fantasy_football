@@ -8,6 +8,25 @@
             }
             }]);
   });
+
+  function changeChart(data){
+    <%@player.org_seasons.each do |season|%>
+        $.ajax({
+             type: 'POST',
+             url: '/json_season',
+             // data: {
+             //    season_id: "<%=season.id%>"
+             // },
+             sucess:function(sucess) {
+              alert('hi');
+              alert(success);
+             },
+             err:function(err) {
+              alert(err);
+             }
+        });
+    <%end%>
+  }
 </script>
 
 <div class="container player-show">
@@ -118,8 +137,8 @@
              <td><%= (season.rec_yards/10/season.total_points*100).round(1) %>%</td>
             <td><%= (season.rec_td*6/season.total_points*100).round(1) %>%</td>
 
-            <td><%= (season.pass_yards/10/season.total_points*100).round(1) %>%</td>
-            <td><%= (season.pass_td*6/season.total_points*100).round(1) %>%</td>
+            <td><%= (season.pass_yards/25/season.total_points*100).round(1) %>%</td>
+            <td><%= (season.pass_td*4/season.total_points*100).round(1) %>%</td>
           </tr>
         <%end%>
          
