@@ -1,4 +1,5 @@
 class PlayersController < ApplicationController
+  require 'json'
   def show
     @player = Player.find(params[:id])
 
@@ -6,6 +7,18 @@ class PlayersController < ApplicationController
     @poe = @player.proj_points_overall_exp
     @pca = @player.proj_points_change_age
     @pce = @player.proj_points_change_exp
+
+    @seasons = @player.seasons.to_json
+
+    @json_seasons = {};
+
+    sl = @seasons.length
+
+    for i in 0..sl 
+      @json_seasons["#{i}"] = @seasons[i];
+    end
+
+    puts @json_seasons
 
   end
 
