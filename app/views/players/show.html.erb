@@ -12,7 +12,7 @@
     "rec_td": "Receiving TD's",
     "pass_attempts": "Pass Attempts",
     "pass_complete": "Passes Completed",
-    "complete_pct": "Completion Percentage",
+    "complete_pct": "Completion %",
     "pass_yards": "Passing Yards",
     "pass_td": "Passing TD's",
     "interceptions": "Interceptions",
@@ -144,7 +144,7 @@
 
   </br>
 
-  <select name="chart-select" onchange="changeChart(this.value)"> 
+  <select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart(this.value)"> 
 
     <% @graphable.each do |stat| %>
     <option value="<%=stat%>"><%=@stat_legend[stat]%></option>

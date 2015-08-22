@@ -34,7 +34,7 @@ class PlayersController < ApplicationController
     "rec_td" => "Receiving TD\'s",
     "pass_attempts" => "Pass Attempts",
     "pass_complete" => "Passes Completed",
-    "complete_pct" => "Completion Percentage",
+    "complete_pct" => "Completion %",
     "pass_yards" => "Passing Yards",
     "pass_avg" => "Yards Per Pass",
     "pass_td" => "Passing TD\'s",
