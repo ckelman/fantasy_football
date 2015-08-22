@@ -1,6 +1,34 @@
 <script>
+
+  var stat_legend = {
+    "total_points" : "Points",
+    "games_played": "Games Played",
+    "rush_attempts": "Rushing Attempts",
+    "rush_yards": "Rushing Yards",
+    "rush_td": "Rushing TD's",
+    "resceptions": "Receptions",
+    "rec_yards": "Receiving Yards",
+    "rec_avg": "Yards Per Catch",
+    "rec_td": "Receiving TD's",
+    "pass_attempts": "Pass Attempts",
+    "pass_complete": "Passes Completed",
+    "complete_pct": "Completion Percentage",
+    "pass_yards": "Passing Yards",
+    "pass_td": "Passing TD's",
+    "interceptions": "Interceptions",
+    "rating": "Passer Rating",
+    "fumbles": "Fumbles",
+    "total_points": "Fantasy Points"
+
+  };
+
+
   $(document).ready(function() {
-    new Chartkick.LineChart("chart-1",[ {"name":"Points",
+
+
+
+    
+    new Chartkick.LineChart("chart-1",[ {"name":"Fantasy Points",
             "data":{
               <%@player.org_seasons.each do |season|%>
                 "<%=season.year%>": <%=season.total_points%>,
@@ -8,28 +36,43 @@
             }
             }]);
 
-    var json_seasons = <%=@seasons%>;
   });
 
-  function changeChart(data){
-    <%@player.org_seasons.each do |season|%>
-        $.ajax({
-             type: 'POST',
-             url: '/json_season',
-             // data: {
-             //    season_id: "<%=season.id%>"
-             // },
-             sucess:function(sucess) {
-              alert('hi');
-              alert(success);
-             },
-             err:function(err) {
-              alert(err);
-             }
-        });
-    <%end%>
+  function get_seasons(){
+    return <%= raw @player.org_seasons.to_json%>;
+  };
+
+  function chartData(data){
+    var seasons = <%= raw @player.org_seasons.to_json%>;
+
+    var json_arr = {};
+
+    for(var i = 0; i < seasons.length; i++){
+      var year = seasons[i]['year'];
+      var stat = seasons[i][data];
+
+      json_arr[year] = stat;
+
+    }
+    return json_arr;
   }
+
+  function changeChart(data){
+
+    var json_arr = chartData(data);
+    
+
+    console.log(json_arr);
+
+
+    new Chartkick.LineChart("chart-1",[ {"name": stat_legend[data],
+            "data": json_arr
+            }]);
+
+  };
 </script>
+
+
 
 <div class="container player-show">
     <h1><%=@player.name%> - <%=@player.position%>, <%=@player.team%></h1>
@@ -100,6 +143,13 @@
     </br>
 
   </br>
+
+  <select name="chart-select" onchange="changeChart(this.value)"> 
+
+    <% @graphable.each do |stat| %>
+    <option value="<%=stat%>"><%=@stat_legend[stat]%></option>
+    <% end %>
+  </select>
 
   <div id="chart-1"></div>
 
