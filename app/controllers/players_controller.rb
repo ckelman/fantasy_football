@@ -20,9 +20,10 @@ class PlayersController < ApplicationController
     @graphable.delete("position")
     @graphable.delete("team")
     @graphable.delete("change_from_last")
+    @graphable.delete("total_points")
 
     @stat_legend = {
-    "total_points"  => "Points",
+    "total_points"  => "Fantasy Points",
     "games_played" => "Games Played",
     "rush_attempts" => "Rushing Attempts",
     "rush_yards" => "Rushing Yards",

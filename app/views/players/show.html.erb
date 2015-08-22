@@ -145,7 +145,7 @@
   </br>
 
   <select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart(this.value)"> 
-
+    <option value="total_points"><%=@stat_legend['total_points']%></option>
     <% @graphable.each do |stat| %>
     <option value="<%=stat%>"><%=@stat_legend[stat]%></option>
     <% end %>
