@@ -18,6 +18,18 @@ class Player < ActiveRecord::Base
     player.nil? ? nil : player.first
   end
 
+  def max_stat(stat)
+    stat_list = seasons.map{|s| s[stat].to_f}
+    stat_list.max
+  end
+
+  def total_stat(stat)
+    stat_list = seasons.map{|s| s[stat].to_f}
+    sum = 0
+    stat_list.each { |s| sum += s }
+    sum
+  end
+
   def org_seasons
     seasons.sort_by{|sea| sea.year}
   end

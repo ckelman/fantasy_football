@@ -1,6 +1,20 @@
 class Season < ActiveRecord::Base
   belongs_to :player
 
+  def standard_stat(stat)
+    attributes[stat].to_f/player.total_stat(stat)*100
+  end
+
+  def standard_stats
+    my_json = {}
+
+    attributes.keys.each do |atr|
+      if attributes[atr].is_a? Numeric 
+        my_json[atr] = standard_stat(atr)
+      end
+    end
+    my_json
+  end
 
   def relevent
     my_points = total_points

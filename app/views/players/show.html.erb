@@ -55,19 +55,66 @@
 
     }
     return json_arr;
-  }
+  };
 
-  function changeChart(data){
+    function compChartData(data){
+    var seasons = <%= raw @player.org_seasons.to_json%>;
 
-    var json_arr = chartData(data);
+    var json_arr = {};
+
+      <% @player.org_seasons.each do |season| %>
+      var stats = <%=raw season.standard_stats.to_json%>
+      var year = <%=season['year']%>;
+      var stat = stats[data];
+
+      json_arr[year] = stat;
+      <% end %>
+        return json_arr;
+  };
+
+  // function changeChart(data){
+
+  //   var json_arr = chartData(data);
     
 
-    console.log(json_arr);
+  //   console.log(json_arr);
 
 
-    new Chartkick.LineChart("chart-1",[ {"name": stat_legend[data],
-            "data": json_arr
-            }]);
+  //   new Chartkick.LineChart("chart-1",[ {"name": stat_legend[data],
+  //           "data": json_arr
+  //           }]);
+
+  // };
+
+  function changeChart(){
+
+    var stat1 = $('#graph-stat-1').val();
+    var stat2 = $('#graph-stat-2').val();
+
+    if(stat2 == 'none'){
+      $('#standardized-message').hide();
+       var json_arr = chartData(stat1);
+       new Chartkick.LineChart("chart-1",[ {"name": stat_legend[stat1],
+          "data": json_arr
+          }]);
+    }
+    else{    
+      $('#standardized-message').show();
+    var json_arr1 = compChartData(stat1);
+    var json_arr2 = compChartData(stat2);
+
+    new Chartkick.LineChart("chart-1",[ {
+            "name": stat_legend[stat1],
+            "data": json_arr1
+            },
+            {
+              "name": stat_legend[stat2],
+              "data": json_arr2
+            }
+            ]);
+    }
+
+
 
   };
 </script>
@@ -144,12 +191,27 @@
 
   </br>
 
-  <select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart(this.value)"> 
+  <h2>Visualize</h2>
+
+
+  <select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart()"> 
     <option value="total_points"><%=@stat_legend['total_points']%></option>
     <% @graphable.each do |stat| %>
     <option value="<%=stat%>"><%=@stat_legend[stat]%></option>
     <% end %>
   </select>
+
+  <div id='and'>And</div>
+
+  <select name="chart-select" class="form-control" id="graph-stat-2" onchange="changeChart()"> 
+    <option value="none">Nothing</option>
+    <option value="total_points"><%=@stat_legend['total_points']%></option>
+    <% @graphable.each do |stat| %>
+    <option value="<%=stat%>"><%=@stat_legend[stat]%></option>
+    <% end %>
+  </select>
+
+    <h4 id='standardized-message'>(These numbers are being standardized to better visualize trends)</h4>
 
   <div id="chart-1"></div>
 
