@@ -15,6 +15,10 @@ Rails.application.routes.draw do
   post 'application/find_player' =>'players#find_player'
 
   post 'json_season' =>'seasons#json_season'
+  post 'json_seasons' =>'players#json_seasons'
+
+  get 'compare_players' => 'players#compare'
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

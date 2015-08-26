@@ -7,6 +7,8 @@ class SeasonsController < ApplicationController
   def json_season
   	# res_season = params[:season_id]
   	res_season = Season.first()
+
+
   	render :json => res_season
   end
 

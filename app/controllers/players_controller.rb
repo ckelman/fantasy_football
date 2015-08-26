@@ -46,9 +46,9 @@ class PlayersController < ApplicationController
 
   }
 
+  end
 
-
-
+  def compare
 
   end
 
@@ -64,6 +64,22 @@ class PlayersController < ApplicationController
   def find_player
     player = Player.get(params[:q])
     redirect_to action: 'show', id: player
+  end
+
+  def json_seasons
+    puts(params[:player_name])
+
+    puts Player.get(params[:player_name]).name
+        
+    found_player = Player.get(params[:player_name])
+    res_seasons = found_player.org_seasons()
+
+    data = {'seasons' => res_seasons, 'name' => Player.get(params[:player_name]).name}
+
+
+
+
+    render :json => data
   end
 
 end

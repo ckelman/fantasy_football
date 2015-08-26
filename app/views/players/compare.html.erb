@@ -1,0 +1,72 @@
+<script>
+function compare(){
+	var p1Input = $('#player-1').val();
+	var p2Input = $('#player-2').val();
+
+
+
+        $.ajax({
+             type: 'POST',
+             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+             url: 'json_seasons',
+             data: {
+                "player_name": p1Input
+             },
+             success:function(player1) {
+             	console.log(player1['seasons']);
+
+             	var data1 = {};
+             	for(var i = 0; i<player1['seasons'].length; i++){
+             		data1[player1['seasons'][i]["year"]] = player1['seasons'][i]["total_points"];
+             	}
+
+             	$.ajax({
+		             type: 'POST',
+		             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+		             url: 'json_seasons',
+		             data: {
+		                "player_name": p2Input
+		             },
+		             success:function(player2) {
+
+		             	var data2 = {};
+		             	for(var i = 0; i<player2['seasons'].length; i++){
+		             		data2[player2['seasons'][i]["year"]] = player2['seasons'][i]["total_points"];
+		             	}
+
+		             	$('#player-1').val(player1['name']);
+		             	$('#player-2').val(player2['name']);
+
+						new Chartkick.LineChart("chart-1",[ {
+				            "name": player1['name'],
+				            "data": data1
+				            },
+				            {
+				              "name": player2['name'],
+				              "data": data2
+				            }
+				        ]);		             	
+		             },
+		             err:function(err1) {
+		              console.log(err);
+		             }
+		        });
+             },
+             err:function(err) {
+              console.log(err);
+             }
+        });
+      };
+</script>
+
+
+
+<div style="width:100%">
+<input type="text" id="player-1"><input type="text" id="player-2">
+<a href="#" onclick="compare()" class="btn btn-primary btn-md">Compare</a>
+</div>
+
+
+
+
+<div id="chart-1"></div>

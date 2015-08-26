@@ -7,6 +7,28 @@
     <%= javascript_include_tag "application", "chartkick" %>
     <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0 maximum-scale=1.0" />
+
+    <script>
+      function player_json(){
+        $.ajax({
+             type: 'POST',
+             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+             url: 'json_seasons',
+             data: {
+                "player_name": "brady"
+             },
+             success:function(success) {
+              console.log(success);
+             },
+             err:function(err) {
+              console.log(err);
+             }
+        });
+      };
+    </script>
+
+
+
   </head>
   <body>
 
@@ -19,6 +41,11 @@
       <% end %>
 
       <%=link_to 'Home', players_path, class: "btn btn-primary btn-md"%>
+
+      <a href="/compare_players" >Compare</a>
+
+
+
 
 
     <%= yield %>
