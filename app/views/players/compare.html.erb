@@ -1,7 +1,10 @@
 <script>
-function compare(){
+function compare(cat){
 	var p1Input = $('#player-1').val();
 	var p2Input = $('#player-2').val();
+
+
+
 
 
 
@@ -17,7 +20,7 @@ function compare(){
 
              	var data1 = {};
              	for(var i = 0; i<player1['seasons'].length; i++){
-             		data1[player1['seasons'][i]["year"]] = player1['seasons'][i]["total_points"];
+             		data1[player1['seasons'][i]["year"]] = player1['seasons'][i][cat];
              	}
 
              	$.ajax({
@@ -31,7 +34,7 @@ function compare(){
 
 		             	var data2 = {};
 		             	for(var i = 0; i<player2['seasons'].length; i++){
-		             		data2[player2['seasons'][i]["year"]] = player2['seasons'][i]["total_points"];
+		             		data2[player2['seasons'][i]["year"]] = player2['seasons'][i][cat];
 		             	}
 
 		             	$('#player-1').val(player1['name']);
@@ -45,7 +48,9 @@ function compare(){
 				              "name": player2['name'],
 				              "data": data2
 				            }
-				        ]);		             	
+				        ]);	
+				        $('#graph-stat-1').val(cat);
+	             	
 		             },
 		             err:function(err1) {
 		              console.log(err);
@@ -57,14 +62,29 @@ function compare(){
              }
         });
       };
+
+  function changeChart(){
+  	 var stat = $('#graph-stat-1').val();
+  	 compare(stat);
+  };
+  function loadPlayers(){
+	compare('total_points');
+  };
 </script>
 
 
 
 <div style="width:100%">
 <input type="text" id="player-1"><input type="text" id="player-2">
-<a href="#" onclick="compare()" class="btn btn-primary btn-md">Compare</a>
+<a href="#" onclick="changeChart()" class="btn btn-primary btn-md">Compare</a>
 </div>
+
+  <select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart()"> 
+    <option value="total_points"><%=@stat_legend['total_points']%></option>
+    <% @graphable.each do |stat| %>
+    <option value="<%=stat%>"><%=@stat_legend[stat]%></option>
+    <% end %>
+  </select>
 
 
 

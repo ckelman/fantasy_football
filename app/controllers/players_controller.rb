@@ -8,48 +8,15 @@ class PlayersController < ApplicationController
     @pca = @player.proj_points_change_age
     @pce = @player.proj_points_change_exp
 
-    @graphable = Season.new.attributes.keys
+    @graphable = graphable
 
-    @graphable.delete("id")
-    @graphable.delete("year")
-    @graphable.delete("player_id")
-    @graphable.delete("created_at")
-    @graphable.delete("updated_at")
-    @graphable.delete("experience")
-    @graphable.delete("age")
-    @graphable.delete("position")
-    @graphable.delete("team")
-    @graphable.delete("change_from_last")
-    @graphable.delete("total_points")
-
-    @stat_legend = {
-    "total_points"  => "Fantasy Points",
-    "games_played" => "Games Played",
-    "rush_attempts" => "Rushing Attempts",
-    "rush_yards" => "Rushing Yards",
-    "rush_avg" => "Yards Per Carry",
-    "rush_td" => "Rushing TD\'s",
-    "receptions" => "Receptions",
-    "rec_yards" => "Receiving Yards",
-    "rec_avg" => "Yards Per Catch",
-    "rec_td" => "Receiving TD\'s",
-    "pass_attempts" => "Pass Attempts",
-    "pass_complete" => "Passes Completed",
-    "complete_pct" => "Completion %",
-    "pass_yards" => "Passing Yards",
-    "pass_avg" => "Yards Per Pass",
-    "pass_td" => "Passing TD\'s",
-    "interceptions" => "Interceptions",
-    "rating" => "Passer Rating",
-    "fumbles" => "Fumbles",
-    "total_points" => "Fantasy Points"
-
-  }
+    @stat_legend = stat_legend
 
   end
 
   def compare
-
+    @stat_legend = stat_legend
+    @graphable = graphable
   end
 
   def index
@@ -81,5 +48,52 @@ class PlayersController < ApplicationController
 
     render :json => data
   end
+
+  protected
+    def stat_legend
+        {
+            "total_points"  => "Fantasy Points",
+            "games_played" => "Games Played",
+            "rush_attempts" => "Rushing Attempts",
+            "rush_yards" => "Rushing Yards",
+            "rush_avg" => "Yards Per Carry",
+            "rush_td" => "Rushing TD\'s",
+            "receptions" => "Receptions",
+            "rec_yards" => "Receiving Yards",
+            "rec_avg" => "Yards Per Catch",
+            "rec_td" => "Receiving TD\'s",
+            "pass_attempts" => "Pass Attempts",
+            "pass_complete" => "Passes Completed",
+            "complete_pct" => "Completion %",
+            "pass_yards" => "Passing Yards",
+            "pass_avg" => "Yards Per Pass",
+            "pass_td" => "Passing TD\'s",
+            "interceptions" => "Interceptions",
+            "rating" => "Passer Rating",
+            "fumbles" => "Fumbles",
+            "total_points" => "Fantasy Points"
+
+          }
+    end
+
+    def graphable
+        graphable = Season.new.attributes.keys
+
+        graphable.delete("id")
+        graphable.delete("year")
+        graphable.delete("player_id")
+        graphable.delete("created_at")
+        graphable.delete("updated_at")
+        graphable.delete("experience")
+        graphable.delete("age")
+        graphable.delete("position")
+        graphable.delete("team")
+        graphable.delete("change_from_last")
+        graphable.delete("total_points")
+
+        graphable
+
+    end
+
 
 end
