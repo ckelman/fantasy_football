@@ -1,66 +1,108 @@
 <script>
+function addPlayer(){
+	$('#players').append(
+		"<span class=\'player-text\'>Player "+ ($('.player').length+1) +"<\/span><input class=\"form-control tf-200 player\" type=\"text\" id=\"player-" + $('.player').length+ "\">"
+		);
+
+};
+
+
 function compare(cat){
-	var p1Input = $('#player-1').val();
-	var p2Input = $('#player-2').val();
+
+	var player_arr = [];
+
+	var player_nodes = $('.player');
+
+	for(var i = 0; i < player_nodes.length; i++){
+		player_arr.push($('#player-'+ i).val());
+	}
 
 
-
-
-
-
-        $.ajax({
-             type: 'POST',
-             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-             url: 'json_seasons',
-             data: {
-                "player_name": p1Input
-             },
-             success:function(player1) {
-             	console.log(player1['seasons']);
-
-             	var data1 = {};
-             	for(var i = 0; i<player1['seasons'].length; i++){
-             		data1[player1['seasons'][i]["year"]] = player1['seasons'][i][cat];
-             	}
-
-             	$.ajax({
+	$.ajax({
 		             type: 'POST',
 		             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-		             url: 'json_seasons',
+		             url: 'json_seasons_arr',
 		             data: {
-		                "player_name": p2Input
+		                "players": player_arr,
+		                "stat": cat
 		             },
-		             success:function(player2) {
+		             success:function(data) {
+		             	console.log(data);
+		             	new Chartkick.LineChart("chart-1", data);
 
-		             	var data2 = {};
-		             	for(var i = 0; i<player2['seasons'].length; i++){
-		             		data2[player2['seasons'][i]["year"]] = player2['seasons'][i][cat];
+		             	for(var i = 0; i< data.length; i++){
+		             		$('#player-'+ i).val(data[i]['name']);
 		             	}
-
-		             	$('#player-1').val(player1['name']);
-		             	$('#player-2').val(player2['name']);
-
-						new Chartkick.LineChart("chart-1",[ {
-				            "name": player1['name'],
-				            "data": data1
-				            },
-				            {
-				              "name": player2['name'],
-				              "data": data2
-				            }
-				        ]);	
-				        $('#graph-stat-1').val(cat);
 	             	
 		             },
 		             err:function(err1) {
 		              console.log(err);
 		             }
 		        });
-             },
-             err:function(err) {
-              console.log(err);
-             }
-        });
+
+
+
+
+
+
+
+	// var p1Input = $('#player-1').val();
+	// var p2Input = $('#player-2').val();
+
+
+      //   $.ajax({
+      //        type: 'POST',
+      //        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+      //        url: 'json_seasons',
+      //        data: {
+      //           "player_name": p1Input
+      //        },
+      //        success:function(player1) {
+      //        	console.log(player1['seasons']);
+
+      //        	var data1 = {};
+      //        	for(var i = 0; i<player1['seasons'].length; i++){
+      //        		data1[player1['seasons'][i]["year"]] = player1['seasons'][i][cat];
+      //        	}
+
+      //        	$.ajax({
+		    //          type: 'POST',
+		    //          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+		    //          url: 'json_seasons',
+		    //          data: {
+		    //             "player_name": p2Input
+		    //          },
+		    //          success:function(player2) {
+
+		    //          	var data2 = {};
+		    //          	for(var i = 0; i<player2['seasons'].length; i++){
+		    //          		data2[player2['seasons'][i]["year"]] = player2['seasons'][i][cat];
+		    //          	}
+
+		    //          	$('#player-1').val(player1['name']);
+		    //          	$('#player-2').val(player2['name']);
+
+						// new Chartkick.LineChart("chart-1",[ {
+				  //           "name": player1['name'],
+				  //           "data": data1
+				  //           },
+				  //           {
+				  //             "name": player2['name'],
+				  //             "data": data2
+				  //           }
+				  //       ]);	
+				  //       $('#graph-stat-1').val(cat);
+	             	
+		    //          },
+		    //          err:function(err1) {
+		    //           console.log(err);
+		    //          }
+		    //     });
+      //        },
+      //        err:function(err) {
+      //         console.log(err);
+      //        }
+      //   });
       };
 
   function changeChart(){
@@ -74,9 +116,13 @@ function compare(cat){
 
 
 
-<div style="width:100%">
-<input type="text" id="player-1"><input type="text" id="player-2">
-<a href="#" onclick="changeChart()" class="btn btn-primary btn-md">Compare</a>
+<div style="width:100%;">
+	<div id='players'>
+		<span class='player-text'>Player 1</span><input class="form-control tf-200 player" type="text" id="player-0">
+		<span class='player-text'>Player 2</span><input class="form-control tf-200 player" type="text" id="player-1">
+	</div>
+	<a onclick="addPlayer()" class="btn btn-primary btn-md">+</a>
+	<a onclick="changeChart()" class="btn btn-primary btn-md">Compare</a>
 </div>
 
   <select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart()"> 

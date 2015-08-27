@@ -49,6 +49,38 @@ class PlayersController < ApplicationController
     render :json => data
   end
 
+  def json_seasons_arr
+    puts(params[:players])
+
+    player_strings = params[:players]
+
+    stat = params[:stat]
+
+    response = []
+
+    player_strings.each do |player_string|
+        puts player_string
+        player = Player.get(player_string)
+        puts player
+
+        name = player.name
+
+        player_data = {}
+
+        player.seasons.each do |season|
+            player_data[season['year']] = season[stat]
+        end
+
+        response.push({'name' => name, 'data' => player_data})
+
+    end
+
+    puts response
+
+
+    render :json => response
+  end
+
   protected
     def stat_legend
         {

@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   post 'json_season' =>'seasons#json_season'
   post 'json_seasons' =>'players#json_seasons'
+  post 'json_seasons_arr' =>'players#json_seasons_arr'
+
 
   get 'compare_players' => 'players#compare'
 

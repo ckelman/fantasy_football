@@ -22,3 +22,15 @@
 	width:100%;
 	display:none;
 }
+.player-text{
+	font-size:14pt;
+	font-weight:bold;
+	float:left;
+}
+
+.tf-200{
+	width:250px;
+	float:left;
+	margin-right:10px;
+	margin-left:10px;
+}
