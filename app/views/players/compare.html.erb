@@ -1,9 +1,16 @@
 <script>
 function addPlayer(){
 	$('#players').append(
-		"<span class=\'player-text\'>Player "+ ($('.player').length+1) +"<\/span><input class=\"form-control tf-200 player\" type=\"text\" id=\"player-" + $('.player').length+ "\">"
+		"<div class=\"col-sm-3 player-wrap\"><div class=\"player-in\"><h4>Player " + ($('.player').length+1) + "</h4><input class=\"form-control player\" type=\"text\" id=\"player-" + $('.player').length+ "\"><\/div><\/div>"
 		);
 
+};
+
+function removePlayer(){
+
+	if($('.player-wrap').length > 1){
+		$('.player-wrap:last').remove();
+	}
 };
 
 
@@ -116,23 +123,47 @@ function compare(cat){
 
 
 
-<div style="width:100%;">
-	<div id='players'>
-		<span class='player-text'>Player 1</span><input class="form-control tf-200 player" type="text" id="player-0">
-		<span class='player-text'>Player 2</span><input class="form-control tf-200 player" type="text" id="player-1">
+
+	<div id="actions" class="col-sm-12">
+		<a id="compare" onclick="changeChart()" class="btn btn-primary btn-md left">Compare</a>
+		
+		<select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart()"> 
+		    <option value="total_points"><%=@stat_legend['total_points']%></option>
+		    <% @graphable.each do |stat| %>
+		    <option value="<%=stat%>"><%=@stat_legend[stat]%></option>
+		    <% end %>
+		 </select>
 	</div>
-	<a onclick="addPlayer()" class="btn btn-primary btn-md">+</a>
-	<a onclick="changeChart()" class="btn btn-primary btn-md">Compare</a>
-</div>
 
-  <select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart()"> 
-    <option value="total_points"><%=@stat_legend['total_points']%></option>
-    <% @graphable.each do |stat| %>
-    <option value="<%=stat%>"><%=@stat_legend[stat]%></option>
-    <% end %>
-  </select>
+
+	<div id="chart-1"></div>
+
+	<div id="actions" class="col-sm-12">
+				<a id="compare-add"onclick="addPlayer()" class="btn btn-success btn-md left">Add Player</a>
+		<a id="compare-remove"onclick="removePlayer()" class="btn btn-danger btn-md left">Remove Player</a>
+	</div>
 
 
 
+	<div id='players'>
 
-<div id="chart-1"></div>
+		<div class="col-sm-3 player-wrap">
+			<div class="player-in">
+				<h4 class='player-text'>Player 1</h4><input class="form-control tf-200 player" type="text" id="player-0">
+			</div>
+		</div>
+
+		<div class="col-sm-3 player-wrap">
+			<div class="player-in">
+				<h4 class='player-text'>Player 2</h4><input class="form-control tf-200 player" type="text" id="player-1">
+			</div>
+		</div>
+
+	</div>
+
+
+
+
+
+
+
