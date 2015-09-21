@@ -46,70 +46,6 @@ function compare(cat){
 		              console.log(err);
 		             }
 		        });
-
-
-
-
-
-
-
-	// var p1Input = $('#player-1').val();
-	// var p2Input = $('#player-2').val();
-
-
-      //   $.ajax({
-      //        type: 'POST',
-      //        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-      //        url: 'json_seasons',
-      //        data: {
-      //           "player_name": p1Input
-      //        },
-      //        success:function(player1) {
-      //        	console.log(player1['seasons']);
-
-      //        	var data1 = {};
-      //        	for(var i = 0; i<player1['seasons'].length; i++){
-      //        		data1[player1['seasons'][i]["year"]] = player1['seasons'][i][cat];
-      //        	}
-
-      //        	$.ajax({
-		    //          type: 'POST',
-		    //          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-		    //          url: 'json_seasons',
-		    //          data: {
-		    //             "player_name": p2Input
-		    //          },
-		    //          success:function(player2) {
-
-		    //          	var data2 = {};
-		    //          	for(var i = 0; i<player2['seasons'].length; i++){
-		    //          		data2[player2['seasons'][i]["year"]] = player2['seasons'][i][cat];
-		    //          	}
-
-		    //          	$('#player-1').val(player1['name']);
-		    //          	$('#player-2').val(player2['name']);
-
-						// new Chartkick.LineChart("chart-1",[ {
-				  //           "name": player1['name'],
-				  //           "data": data1
-				  //           },
-				  //           {
-				  //             "name": player2['name'],
-				  //             "data": data2
-				  //           }
-				  //       ]);	
-				  //       $('#graph-stat-1').val(cat);
-	             	
-		    //          },
-		    //          err:function(err1) {
-		    //           console.log(err);
-		    //          }
-		    //     });
-      //        },
-      //        err:function(err) {
-      //         console.log(err);
-      //        }
-      //   });
       };
 
   function changeChart(){
@@ -119,12 +55,24 @@ function compare(cat){
   function loadPlayers(){
 	compare('total_points');
   };
+
+  $(window).ready(function(){
+  	$('#player-0').val("Tom Brady");
+  	$('#player-1').val("Peyton Manning");
+  	changeChart();
+  });
 </script>
 
 
 
 
-	<div id="actions" class="col-sm-12">
+
+
+
+	<div id="chart-1"></div>
+
+
+		<div id="actions" class="col-sm-12">
 		<a id="compare" onclick="changeChart()" class="btn btn-primary btn-md left">Compare</a>
 		
 		<select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart()"> 
@@ -135,13 +83,12 @@ function compare(cat){
 		 </select>
 	</div>
 
-
-	<div id="chart-1"></div>
-
 	<div id="actions" class="col-sm-12">
 				<a id="compare-add"onclick="addPlayer()" class="btn btn-success btn-md left">Add Player</a>
 		<a id="compare-remove"onclick="removePlayer()" class="btn btn-danger btn-md left">Remove Player</a>
 	</div>
+
+
 
 
 
