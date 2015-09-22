@@ -1,6 +1,13 @@
 body{
-	padding-top:50px;
+	padding-top:70px;
 	padding-bottom:15px;
+	overflow-top:hidden;
+}
+
+
+.third{
+	width:30%;
+	float:left;
 }
 
 #graph-stat-1{

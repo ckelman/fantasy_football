@@ -1,27 +1,32 @@
+  
+<div id="position-lists">
   <div class="row">
     <h1 class=text-center>Current Projections</h1>
   </br>
-    <div id="rb-col" class="col-sm-4 col-sm-offset-0">
+    <div id="rb-col" class="third">
+      <h4>Running Backs</h4>
         <% @rbs.each do |player| %>
-          <div class="row">
-              <span class="col-sm-7"><%=(@count+=1)%>. <%=link_to player.name, player%> (<%=player.position%>)</span>  <span class="col-sm-5"><%=player.projected_points%> (<%=player.projected_ppg%> ppg) </span>
-          </div>
+              <p><%=(@count+=1)%>. <%=link_to player.name, player%> <%=player.projected_points%> (<%=player.projected_ppg%> ppg) </p>
         <%end%>
     </div>
-    <div id="qb-col" class="col-sm-4">
+    <div id="qb-col" class="third">
+      <h4>Quarterbacks</h4>
       <%@count = 0%>
         <% @qbs.each do |player| %>
-          <div class="row">
-              <span class="col-sm-7"><%=(@count+=1)%>. <%=link_to player.name, player%> (<%=player.position%>)</span>  <span class="col-sm-5"><%=player.projected_points%> (<%=player.projected_ppg%> ppg) </span>
-            </div>
+        <p>
+             <%=(@count+=1)%>. <%=link_to player.name, player%>  <%=player.projected_points%> (<%=player.projected_ppg%> ppg) 
+           </p>
         <%end%>
     </div>
-    <div id="wr-col" class="col-sm-4">
+    <div id="wr-col" class="third">
+      <h4>Wide Receivers</h4>
       <%@count = 0%>
         <% @wrs.each do |player| %>
-          <div class="row">
-              <span class="col-sm-7"><%=(@count+=1)%>. <%=link_to player.name, player%> (<%=player.position%>)</span>  <span class="col-sm-5"><%=player.projected_points%> (<%=player.projected_ppg%> ppg) </span>
-            </div>
+            <p>
+              <%=(@count+=1)%>. <%=link_to player.name, player%>  <%=player.projected_points%> (<%=player.projected_ppg%> ppg)
+            </p>
         <%end%>
     </div>
   </div>
+
+<div>
