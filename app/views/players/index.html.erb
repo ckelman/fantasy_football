@@ -1,12 +1,12 @@
   
 <div id="position-lists">
-  <div class="row">
+  <div >
     <h1 class=text-center>Current Projections</h1>
   </br>
     <div id="rb-col" class="third">
       <h4>Running Backs</h4>
         <% @rbs.each do |player| %>
-              <p><%=(@count+=1)%>. <%=link_to player.name, player%> <%=player.projected_points%> (<%=player.projected_ppg%> ppg) </p>
+              <p><%=(@count+=1)%>. <%=link_to player.name, player%> (<%=player.projected_ppg%> ppg) </p>
         <%end%>
     </div>
     <div id="qb-col" class="third">
@@ -14,7 +14,7 @@
       <%@count = 0%>
         <% @qbs.each do |player| %>
         <p>
-             <%=(@count+=1)%>. <%=link_to player.name, player%>  <%=player.projected_points%> (<%=player.projected_ppg%> ppg) 
+             <%=(@count+=1)%>. <%=link_to player.name, player%> (<%=player.projected_ppg%> ppg) 
            </p>
         <%end%>
     </div>
@@ -23,7 +23,7 @@
       <%@count = 0%>
         <% @wrs.each do |player| %>
             <p>
-              <%=(@count+=1)%>. <%=link_to player.name, player%>  <%=player.projected_points%> (<%=player.projected_ppg%> ppg)
+              <%=(@count+=1)%>. <%=link_to player.name, player%> (<%=player.projected_ppg%> ppg)
             </p>
         <%end%>
     </div>

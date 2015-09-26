@@ -4,6 +4,19 @@ body{
 	overflow-top:hidden;
 }
 
+.black-link a{
+	color:black;
+}
+
+.black-link a:hover{
+	color:gray;
+}
+
+.black-link a:active{
+	color:gray;
+}
+
+
 
 .third{
 	width:30%;

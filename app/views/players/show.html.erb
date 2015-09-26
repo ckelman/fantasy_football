@@ -124,14 +124,10 @@
 <div class="container player-show">
     <h1><%=@player.name%> - <%=@player.position%>, <%=@player.team%></h1>
 
-    <h3><%=@player.age%> years old, <%=@player.weight%> lbs, Year <%=@player.experience%></h3>
-
-  </br>
-
-    <h1>Fantasy Points</h1>
+    <h3><%=@player.age%> years old, <%=@player.weight%> lbs</h3>
 
     <h3>Career Averages: <%=@player.average_points%> per year : <%=(@player.average_points/16).round(1)%> ppg</h3>
-
+<!-- 
     </br>
     <h2>Projections: <%=@player.projected_points%> (<%=@player.projected_ppg%> ppg)</h2>
 
@@ -189,7 +185,7 @@
       </div>
     </br>
 
-  </br>
+  </br> -->
 
   <h2>Visualize</h2>
 
@@ -347,10 +343,10 @@
         </tbody>
       </table>
 
-        <%@player.org_seasons.each do |season|%>
+<!--         <%@player.org_seasons.each do |season|%>
           <div class="col-sm-1">
             <h4><%= link_to season.year, season %></h4>
           </div>
-        <%end%>
+        <%end%> -->
     
 </div>
