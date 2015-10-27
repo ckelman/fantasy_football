@@ -1,8 +1,15 @@
 <script>
 function addPlayer(){
 	$('#players').append(
-		"<div class=\"col-sm-3 player-wrap\"><div class=\"player-in\"><h4>Player " + ($('.player').length+1) + "</h4><input class=\"form-control player\" type=\"text\" id=\"player-" + $('.player').length+ "\"><\/div><\/div>"
+		"<div class=\"col-sm-3 player-wrap\"><div class=\"player-in\"><h4>Player " + ($('.player').length+1) + "</h4><form class=\"form\" onsubmit=\"changeChart()\"><input class=\"form-control player\" placeholder=\"Player Name\" type=\"text\" id=\"player-" + $('.player').length+ "\"><\/form><\/div><\/div>"
 		);
+
+	$('.form').submit(function () {
+	 changeChart();
+	 return false;
+	});
+	
+	$("#player-" + ($('.player').length-1)).focus();
 
 };
 
@@ -51,6 +58,7 @@ function compare(cat){
   function changeChart(){
   	 var stat = $('#graph-stat-1').val();
   	 compare(stat);
+  	 return false;
   };
   function loadPlayers(){
 	compare('total_points');
@@ -60,6 +68,11 @@ function compare(cat){
   	$('#player-0').val("Tom Brady");
   	$('#player-1').val("Peyton Manning");
   	changeChart();
+
+  	$('.form').submit(function () {
+	 changeChart();
+	 return false;
+	});
   });
 </script>
 
@@ -96,17 +109,23 @@ function compare(cat){
 
 		<div class="col-sm-3 player-wrap">
 			<div class="player-in">
-				<h4 class='player-text'>Player 1</h4><input class="form-control tf-200 player" type="text" id="player-0">
+				<h4 class='player-text'>Player 1</h4>
+				<form class='form' onsubmit="changeChart()">
+					<input class="form-control tf-200 player" type="text" id="player-0">
+				</form>
 			</div>
 		</div>
 
 		<div class="col-sm-3 player-wrap">
 			<div class="player-in">
-				<h4 class='player-text'>Player 2</h4><input class="form-control tf-200 player" type="text" id="player-1">
+				<form class='form' onsubmit="changeChart()">
+					<h4 class='player-text'>Player 2</h4><input class="form-control tf-200 player" type="text" id="player-1">
+				</form>
 			</div>
 		</div>
 
 	</div>
+
 
 
 
