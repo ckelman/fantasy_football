@@ -33,6 +33,8 @@ class PlayersController < ApplicationController
     redirect_to action: 'show', id: player
   end
 
+
+
   def json_seasons
     puts(params[:player_name])
 
@@ -47,6 +49,18 @@ class PlayersController < ApplicationController
 
 
     render :json => data
+  end
+
+  def json_player_names
+    players = Player.get_all(params[:player_name])
+
+    player_names = players.map{|p| p.name}
+
+    player_names.sort!
+
+    puts player_names
+
+    render :json => player_names
   end
 
   def json_seasons_arr

@@ -1,14 +1,14 @@
 <script>
 function addPlayer(){
 	$('#players').append(
-		"<div class=\"col-sm-3 player-wrap\"><div class=\"player-in\"><h4>Player " + ($('.player').length+1) + "</h4><form class=\"form\" onsubmit=\"changeChart()\"><input class=\"form-control player\" placeholder=\"Player Name\" type=\"text\" id=\"player-" + $('.player').length+ "\"><\/form><\/div><\/div>"
+		"<div class=\"col-sm-3 player-wrap\"><div class=\"player-in\"><h4>Player " + ($('.player').length+1) + "</h4><form class=\"form\" onsubmit=\"changeChart()\"><input class=\"form-control player\" placeholder=\"Player Name\" type=\"text\" id=\"player-" + $('.player').length+ "\" list=\"plist\"><\/form><\/div><\/div>"
 		);
 
 	$('.form').submit(function () {
 	 changeChart();
 	 return false;
 	});
-	
+
 	$("#player-" + ($('.player').length-1)).focus();
 
 };
@@ -19,6 +19,28 @@ function removePlayer(){
 		$('.player-wrap:last').remove();
 	}
 };
+
+function set_all_names(input_id){
+	$.ajax({
+		             type: 'POST',
+		             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+		             url: 'json_player_names',
+		             data: {
+		                "player_name": ""
+		             },
+		             success:function(data) {
+		             	for(var i=0; i<data.length; i++){
+		             		$(input_id).append("<option>"+data[i]+"<\/option>");
+		             	}
+		             	
+		             	console.log(data);
+	             	
+		             },
+		             err:function(err1) {
+		              console.log(err);
+		             }
+		        });
+}
 
 
 function compare(cat){
@@ -65,9 +87,11 @@ function compare(cat){
   };
 
   $(window).ready(function(){
+  	set_all_names("#plist");
   	$('#player-0').val("Tom Brady");
   	$('#player-1').val("Peyton Manning");
   	changeChart();
+
 
   	$('.form').submit(function () {
 	 changeChart();
@@ -107,11 +131,14 @@ function compare(cat){
 
 	<div id='players'>
 
+		<datalist id="plist">
+		</datalist>
+
 		<div class="col-sm-3 player-wrap">
 			<div class="player-in">
 				<h4 class='player-text'>Player 1</h4>
 				<form class='form' onsubmit="changeChart()">
-					<input class="form-control tf-200 player" type="text" id="player-0">
+					<input class="form-control tf-200 player" type="text" id="player-0" list="plist">
 				</form>
 			</div>
 		</div>
@@ -119,7 +146,7 @@ function compare(cat){
 		<div class="col-sm-3 player-wrap">
 			<div class="player-in">
 				<form class='form' onsubmit="changeChart()">
-					<h4 class='player-text'>Player 2</h4><input class="form-control tf-200 player" type="text" id="player-1">
+					<h4 class='player-text'>Player 2</h4><input class="form-control tf-200 player" type="text" id="player-1" list="plist">
 				</form>
 			</div>
 		</div>
