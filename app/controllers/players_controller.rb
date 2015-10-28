@@ -58,8 +58,6 @@ class PlayersController < ApplicationController
 
     player_names.sort!
 
-    puts player_names
-
     render :json => player_names
   end
 
