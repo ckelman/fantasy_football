@@ -476,7 +476,7 @@ module Populator
 
 
     the_table = rushing_table
-    if(player.position == 'TE' || player.position == 'WR' || position.include?("Receiver"))
+    if(player.position == 'TE' || player.position == 'WR' || player.position.include?("Receiver"))
       the_table = receiving_table
     elsif(player.position == 'QB')
       the_table = passing_table
