@@ -48,6 +48,9 @@ class PlayersController < ApplicationController
 
   def find_player
     player = Player.get(params[:q])
+    if player == nil
+        player = Player.get("Antonio Brown")
+    end
     redirect_to action: 'show', id: player
   end
 

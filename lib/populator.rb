@@ -49,7 +49,7 @@ module Populator
     Season.set_all
     Player.calc_all_projected_points
     Player.set_actives
-    Player.remove_all_nils
+    # Player.remove_all_nils
   end
 
   def self.populate_stats_qb

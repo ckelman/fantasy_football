@@ -1,9 +1,9 @@
 <script>
 function changeToYear(){
 	$("#career-button").removeClass("btn-info");
-	$("#career-button").addClass("btn-secondary");
+	$("#career-button").addClass("btn-default");
 
-	$("#year-button").removeClass("btn-secondary");
+	$("#year-button").removeClass("btn-default");
 	$("#year-button").addClass("btn-info");
 
 	$("#year-select").show()
@@ -13,11 +13,11 @@ function changeToYear(){
 }
 
 function changeToCareer(){
-	$("#career-button").removeClass("btn-secondary");
+	$("#career-button").removeClass("btn-default");
 	$("#career-button").addClass("btn-info");
 
 	$("#year-button").removeClass("btn-info");
-	$("#year-button").addClass("btn-secondary");
+	$("#year-button").addClass("btn-default");
 
 	$("#year-select").hide()
 	changeChart();
@@ -203,7 +203,7 @@ function compare(cat){
 
 	<div class="col-sm-3">	
 		<a onclick="changeToCareer()" id="career-button" class="btn btn-info btn-md left">Career</a>
-		<a onclick="changeToYear()" id="year-button" class="btn btn-secondary btn-md left">Year</a>
+		<a onclick="changeToYear()" id="year-button" class="btn btn-default btn-md left">Year</a>
 
 		<div id="year-select" hidden="true">
 			<select class="form-control" onChange="changeChart()">
