@@ -29,7 +29,7 @@ module Populator
   def self.populate_stats_pages
 
     ['rushing','receiving','passing'].each do |style|
-      (2007..2015).each do |year|
+      (2012..2015).each do |year|
         self.populate_from_list_stats('http://espn.go.com/nfl/statistics/player/_/stat/'+style+'/year/'+year.to_s)
 
         #second and third page for receiving + rushing
