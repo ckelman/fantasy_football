@@ -1,5 +1,6 @@
 class Season < ActiveRecord::Base
   belongs_to :player
+  has_many :games, dependent: :destroy
 
   def standard_stat(stat)
     attributes[stat].to_f/player.total_stat(stat)*100
@@ -14,6 +15,10 @@ class Season < ActiveRecord::Base
       end
     end
     my_json
+  end
+
+  def org_games
+    games.sort_by{|game| game.date}
   end
 
   def relevent

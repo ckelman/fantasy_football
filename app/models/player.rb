@@ -18,6 +18,10 @@ class Player < ActiveRecord::Base
     player.nil? ? nil : player.first
   end
 
+  def get_season(year)
+    seasons.where(year: year)[0]
+  end
+
   def max_stat(stat)
     stat_list = seasons.map{|s| s[stat].to_f}
     stat_list.max
@@ -77,7 +81,7 @@ class Player < ActiveRecord::Base
   end
 
   def set_active
-    update_attributes(active: org_seasons.last== nil || org_seasons.last.year == 2014)
+    update_attributes(active: org_seasons.last== nil || org_seasons.last.year == 2015)
   end
 
   #computes a players average points multiplier
@@ -89,6 +93,7 @@ class Player < ActiveRecord::Base
       end
       (total/seasons.size).round(1)
     rescue
+      0
     end
   end
 
@@ -144,6 +149,24 @@ class Player < ActiveRecord::Base
   #returns a players most recent season
   def last_season
     seasons.sort_by{|s| -s[:year]}.first
+  end
+
+  def last_points
+    season = seasons.sort_by{|s| -s[:year]}.first
+    if season != nil
+      return season.total_points
+    else
+      return 0
+    end
+  end
+
+  def last_ppg
+    season = seasons.sort_by{|s| -s[:year]}.first
+    if season != nil
+      return (season.total_points/season.games_played).round(1)
+    else
+      return 0
+    end
   end
 
   # calculates the players average production compared to league average of that age
@@ -290,6 +313,21 @@ class Player < ActiveRecord::Base
       end
     rescue
       return ((last_season.total_points*2 + average_points) /3).round(1)
+    end
+  end
+
+  def remove_nils
+    attributes.keys.each do |attribute|
+      if attributes[attribute] == nil
+        update_attribute(attribute, 0)
+      end
+      
+    end
+  end
+
+  def self.remove_all_nils
+    Player.all.each do |player|
+      player.remove_nils
     end
   end
 

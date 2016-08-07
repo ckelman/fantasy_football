@@ -3,10 +3,6 @@ class PlayersController < ApplicationController
   def show
     @player = Player.find(params[:id])
 
-    @poa = @player.proj_points_overall_age
-    @poe = @player.proj_points_overall_exp
-    @pca = @player.proj_points_change_age
-    @pce = @player.proj_points_change_exp
 
     @graphable = graphable
 
@@ -16,14 +12,36 @@ class PlayersController < ApplicationController
 
   def compare
     @stat_legend = stat_legend
+    @stat_legend_json = stat_legend.to_json
     @graphable = graphable
   end
 
   def index
     @players = Player.where{active == true}
-    @rbs = @players.where{position =='RB'}.sort_by{|play| -play.projected_points}
-    @wrs = @players.where{position =='WR'}.sort_by{|play| -play.projected_points}
-    @qbs = @players.where{position =='QB'}.sort_by{|play| -play.projected_points}
+    @rbs = @players.where{position =='RB'}.sort_by{|play| -play.last_points}
+
+    @rbs.each do |rb|
+        if rb.average_points == nil || rb.average_points == 0
+            @rbs.delete(rb)
+        end
+    end
+
+    @wrs = @players.where{position =='WR'}.sort_by{|play| -play.last_points}
+
+    @wrs.each do |wr|
+        if wr.average_points == nil || wr.average_points == 0
+            @wrs.delete(wr)
+        end
+    end
+
+    @qbs = @players.where{position =='QB'}.sort_by{|play| -play.last_points}
+
+    @qbs.each do |qb|
+        if qb.average_points == nil || qb.average_points == 0
+            @qbs.delete(qb)
+        end
+    end
+
     @count = 0
   end
 
@@ -73,6 +91,9 @@ class PlayersController < ApplicationController
     player_strings.each do |player_string|
         puts player_string
         player = Player.get(player_string)
+        if player == nil
+            next 
+        end
         puts player
 
         name = player.name
@@ -119,6 +140,32 @@ class PlayersController < ApplicationController
 
           }
     end
+
+    # def stat_legend_rev
+    #     {
+    #         "Fantasy Points" => "total_points",
+    #          "Games Played" => "games_played",
+    #          "Fumbles" => "fumbles",
+    #          "Rushing: Attempts" => "rush_attempts",
+    #          "Rushing: Yards" => "rush_yards",
+    #          "Rushing: Yards Per Carry" => "rush_avg",
+    #          "Rushing: TD\'s" => "rush_td",
+    #          "Receiving: Receptions" => "receptions",
+    #          "Receiving: Yards" => "rec_yards",
+    #          "Receiving: Yards Per Catch" => "rec_avg",
+    #          "Receiving: TD\'s" => "rec_td",
+    #          "Passing: Attempts" => "pass_attempts",
+    #          "Passing: Completions" => "pass_complete",
+    #          "Passing: Completion %" => "complete_pct",
+    #          "Passing: Yards" => "pass_yards",
+    #          "Passing: Yards Per Pass" => "pass_avg",
+    #          "Passing: TD\'s" => "pass_td",
+    #          "Passing: Interceptions" => "interceptions",
+    #          "Passing: Passer Rating" =>"rating",
+    #          "Fantasy Points" => "total_points" 
+
+    #       }
+    # end
 
     def graphable
         graphable = Season.new.attributes.keys

@@ -1,7 +1,32 @@
 <script>
+function changeToYear(){
+	$("#career-button").removeClass("btn-info");
+	$("#career-button").addClass("btn-secondary");
+
+	$("#year-button").removeClass("btn-secondary");
+	$("#year-button").addClass("btn-info");
+
+	$("#year-select").show()
+
+	changeChart();
+
+}
+
+function changeToCareer(){
+	$("#career-button").removeClass("btn-secondary");
+	$("#career-button").addClass("btn-info");
+
+	$("#year-button").removeClass("btn-info");
+	$("#year-button").addClass("btn-secondary");
+
+	$("#year-select").hide()
+	changeChart();
+
+}
+
 function addPlayer(){
 	$('#players').append(
-		"<div class=\"col-sm-3 player-wrap\"><div class=\"player-in\"><h4>Player " + ($('.player').length+1) + "</h4><form class=\"form\" onsubmit=\"changeChart()\"><input class=\"form-control player\" placeholder=\"Player Name\" type=\"text\" id=\"player-" + $('.player').length+ "\" list=\"plist\"><\/form><\/div><\/div>"
+		"<div class=\"col-sm-3 player-wrap\"><div class=\"player-in\"><form class=\"form\" onsubmit=\"changeChart()\"><input class=\"form-control player\" placeholder=\"Player Name\" type=\"text\" id=\"player-" + $('.player').length+ "\" list=\"plist\"><\/form><\/div><\/div>"
 		);
 
 	$('.form').submit(function () {
@@ -43,6 +68,47 @@ function set_all_names(input_id){
 }
 
 
+function getGames(){
+  var player_arr = [];
+
+	var player_nodes = $('.player');
+
+	for(var i = 0; i < player_nodes.length; i++){
+		player_arr.push($('#player-'+ i).val());
+	}
+
+
+  year = $("#year-select select").val();
+
+  cat = $('#graph-stat-1').val();
+
+// Will need to change what categories are acceptable for game comparisons
+  if(cat == "total_points")
+  	cat = "points";
+
+$.ajax({
+                 type: 'POST',
+                 beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+                 url: '/json_games_arr',
+                 data: {
+                    "players": player_arr,
+                    "stat": cat,
+                    "year": year
+                 },
+                 success:function(data) {
+                  console.log(data);
+                  new Chartkick.LineChart("chart-1", data);
+
+                  setChartTitle(data);
+                
+                 },
+                 err:function(err1) {
+                  console.log(err);
+                 }
+            });
+  }
+
+
 function compare(cat){
 
 	var player_arr = [];
@@ -65,11 +131,8 @@ function compare(cat){
 		             success:function(data) {
 		             	console.log(data);
 		             	new Chartkick.LineChart("chart-1", data);
-
-		             	for(var i = 0; i< data.length; i++){
-		             		$('#player-'+ i).val(data[i]['name']);
-		             	}
-	             	
+		         
+		             	setChartTitle(data);
 		             },
 		             err:function(err1) {
 		              console.log(err);
@@ -78,18 +141,54 @@ function compare(cat){
       };
 
   function changeChart(){
+  	if(!isCareer()){
+  		getGames();
+  	}
+  	else{
   	 var stat = $('#graph-stat-1').val();
   	 compare(stat);
+  	}
   	 return false;
   };
+
+
+ function setChartTitle(data){
+ 	var title=""
+ 	for(var i = 0; i< data.length; i++){
+		$('#player-'+ i).val(data[i]['name']);
+		title += data[i]['name'] + " vs ";
+ 	}
+
+ 	title = title.substring(0,title.length-3);
+ 	var rev_cats = <%=@stat_legend_json.to_s.html_safe%>;
+ 	var displayCategory = rev_cats[$('#graph-stat-1').val()]
+
+ 	if(isCareer())
+ 		displayCategory = "Career " + displayCategory
+ 	else{
+ 		displayCategory = $("#year-select select").val() + " " + displayCategory
+ 	}
+
+
+
+ 	$("#chart-title").html(displayCategory);
+
+ 	$("#chart-title-names").html(title);
+  }
+
+  function isCareer(){
+  	return $("#career-button").hasClass("btn-info");
+  }
+
+
   function loadPlayers(){
 	compare('total_points');
   };
 
   $(window).ready(function(){
   	set_all_names("#plist");
-  	$('#player-0').val("Tom Brady");
-  	$('#player-1').val("Peyton Manning");
+  	$('#player-0').val("Antonio Brown");
+  	$('#player-1').val("Julio Jones");
   	changeChart();
 
 
@@ -102,9 +201,36 @@ function compare(cat){
 
 
 
+	<div class="col-sm-3">	
+		<a onclick="changeToCareer()" id="career-button" class="btn btn-info btn-md left">Career</a>
+		<a onclick="changeToYear()" id="year-button" class="btn btn-secondary btn-md left">Year</a>
+
+		<div id="year-select" hidden="true">
+			<select class="form-control" onChange="changeChart()">
+			  <option>2015</option>
+			  <option>2014</option>
+			  <option>2013</option>
+			  <option>2012</option>
+			  <option>2011</option>
+			  <option>2010</option>
+			  <option>2009</option>
+			  <option>2008</option>
+			  <option>2007</option>
+			  <option>2006</option>
+			  <option>2005</option>
+			  <option>2004</option>
+			  <option>2003</option>
+			  <option>2002</option>
+			  <option>2001</option>
+			</select>
+		</div>
+	</div>
 
 
-
+	<div class="col-sm-6" >
+		<h2 id="chart-title" style="text-align:center;font-weight:bold;">Category</h2>
+		<h4 id="chart-title-names" class="subtitle" style="text-align:center;">Names</h4>
+	</div>
 
 	<div id="chart-1"></div>
 
@@ -121,37 +247,38 @@ function compare(cat){
 	</div>
 
 	<div id="actions" class="col-sm-12">
-				<a id="compare-add"onclick="addPlayer()" class="btn btn-success btn-md left">Add Player</a>
+		<a id="compare-add"onclick="addPlayer()" class="btn btn-success btn-md left">Add Player</a>
 		<a id="compare-remove"onclick="removePlayer()" class="btn btn-danger btn-md left">Remove Player</a>
+
+		<div id='players' class="col-sm-9">
+			<datalist id="plist">
+			</datalist>
+
+			<div class="col-sm-3 player-wrap">
+				<div class="player-in">
+					
+					<form class='form' onsubmit="changeChart()">
+						<input class="form-control tf-200 player" type="text" id="player-0" list="plist">
+					</form>
+				</div>
+			</div>
+
+			<div class="col-sm-3 player-wrap">
+				<div class="player-in">
+					<form class='form' onsubmit="changeChart()">
+						<input class="form-control tf-200 player" type="text" id="player-1" list="plist">
+					</form>
+				</div>
+			</div>
+
+		</div>
 	</div>
 
 
 
 
 
-	<div id='players'>
-
-		<datalist id="plist">
-		</datalist>
-
-		<div class="col-sm-3 player-wrap">
-			<div class="player-in">
-				<h4 class='player-text'>Player 1</h4>
-				<form class='form' onsubmit="changeChart()">
-					<input class="form-control tf-200 player" type="text" id="player-0" list="plist">
-				</form>
-			</div>
-		</div>
-
-		<div class="col-sm-3 player-wrap">
-			<div class="player-in">
-				<form class='form' onsubmit="changeChart()">
-					<h4 class='player-text'>Player 2</h4><input class="form-control tf-200 player" type="text" id="player-1" list="plist">
-				</form>
-			</div>
-		</div>
-
-	</div>
+	
 
 
 

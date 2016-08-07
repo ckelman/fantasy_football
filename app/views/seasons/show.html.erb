@@ -1,3 +1,49 @@
+<script>
+$(document).ready(function() {
+
+
+
+    
+    new Chartkick.LineChart("chart-1",[ {"name":"Fantasy Points",
+            "data":{
+              <%@season.org_games.each do |game|%>
+                "<%=game.date%>": <%=game.points%>,
+              <%end%>
+            }
+            }]);
+      getGames();
+
+  });
+
+function getGames(cat){
+  player_arr=["<%=@season.player.name%>","Tom Brady"]
+  year ="<%=@season.year%>"
+$.ajax({
+                 type: 'POST',
+                 beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+                 url: '/json_games_arr',
+                 data: {
+                    "players": player_arr,
+                    "stat": cat,
+                    "year": year
+                 },
+                 success:function(data) {
+                  console.log(data);
+                  new Chartkick.LineChart("chart-1", data);
+
+                  for(var i = 0; i< data.length; i++){
+                    $('#player-'+ i).val(data[i]['name']);
+                  }
+                
+                 },
+                 err:function(err1) {
+                  console.log(err);
+                 }
+            });
+  }
+
+</script>
+
 <div class="container">
   <h1><%=link_to @season.player.name, @season.player%> - <%=@season.team%>, <%=@season.year%></h1>
   <h2>Year <%=@season.experience%>, <%=@season.age%> years old</h2>
@@ -51,3 +97,5 @@
 
 
 </div>
+
+<div id="chart-1"></div>

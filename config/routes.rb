@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :games
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -18,6 +20,8 @@ Rails.application.routes.draw do
   post 'json_seasons' =>'players#json_seasons'
   post 'json_seasons_arr' =>'players#json_seasons_arr'
   post 'json_player_names' =>'players#json_player_names'
+
+  post 'json_games_arr' =>'seasons#json_games_arr'
 
 
   get 'compare_players' => 'players#compare'

@@ -4,6 +4,10 @@ body{
 	overflow-top:hidden;
 }
 
+.btn{
+	border-color:#D3D3D3;
+}
+
 
 .black-link a{
 	color:black;
@@ -50,6 +54,7 @@ body{
 }
 .player-in{
 	display:block;
+	padding-bottom:10px;
 }
 #actions{
 	display:inline-block;
