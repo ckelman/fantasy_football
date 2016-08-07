@@ -150,7 +150,7 @@ module Populator
 
       games.each do |game|
         begin
-          if(position == "TE" || position == "WR")
+          if(position == "TE" || position == "WR" || position.include?("Receiver"))
 
             date = game.css('td:nth-child(1)').inner_html
             opponent = game.css('td:nth-child(2) a').inner_html
@@ -194,7 +194,6 @@ module Populator
 
             old_game = Game.where(season_id: s_id, date: date)
             if(old_game.size == 0)
-              puts "hello"
 
               Game.create(season_id: s_id, date: date, opponent: opponent, score: score, receptions: receptions, targets: targets, rec_yards: rec_yards, 
                           rec_avg: rec_avg, rec_lng: rec_lng, rec_td: rec_td, rush_att: rush_att, rush_yards: rush_yards, rush_avg: rush_avg, rush_lng: rush_lng,
@@ -259,7 +258,6 @@ module Populator
 
             old_game = Game.where(season_id: s_id, date: date)
             if(old_game.size == 0)
-              puts "hello"
 
               Game.create(season_id: s_id, date: date, opponent: opponent, score: score, receptions: receptions, targets: targets, rec_yards: rec_yards, 
                           rec_avg: rec_avg, rec_lng: rec_lng, rec_td: rec_td, rush_att: rush_att, rush_yards: rush_yards, rush_avg: rush_avg, rush_lng: rush_lng,
@@ -319,7 +317,6 @@ module Populator
 
             old_game = Game.where(season_id: s_id, date: date)
             if(old_game.size == 0)
-              puts "hello"
 
               Game.create(season_id: s_id, date: date, opponent: opponent, score: score, rush_att: rush_att, rush_yards: rush_yards, rush_avg: rush_avg, rush_lng: rush_lng,
                           rush_td: rush_td, fumbles: fumbles, fumbles_lost: fumbles_lost, win: win, completions: completions, attempts: pass_att,
@@ -479,7 +476,7 @@ module Populator
 
 
     the_table = rushing_table
-    if(player.position == 'TE' || player.position == 'WR')
+    if(player.position == 'TE' || player.position == 'WR' || position.include?("Receiver"))
       the_table = receiving_table
     elsif(player.position == 'QB')
       the_table = passing_table
@@ -574,13 +571,11 @@ module Populator
                      (pass_yards.to_f / 25) + (pass_td.to_f * 4) -
                      (2 * fumbles)
 
-      puts "calc done"
 
 
       player_id = player.id
       pseason = player.seasons.where(year: year).first
       if(pseason == nil)
-        puts "pseason = nil" 
 
         Season.create(year: year, team: team, games_played: gp, rush_attempts: rush_att,
         rush_yards: rush_yards, rush_avg: rush_avg, rush_td: rush_td, receptions: receptions,
@@ -590,7 +585,6 @@ module Populator
         total_points: total_points, player_id: player.id)
 
       else
-        puts "not here"
         pseason.update_attributes(year: year, team: team, games_played: gp, rush_attempts: rush_att,
         rush_yards: rush_yards, rush_avg: rush_avg, rush_td: rush_td, receptions: receptions,
         rec_yards: rec_yards, rec_avg: rec_avg, rec_td: rec_td, pass_attempts: pass_attempts,
@@ -609,7 +603,7 @@ module Populator
         next if stathead.size == 0
 
         if stathead[0].text.strip =~ /Rushing Stats/ || stathead[0].text.strip =~ /RUSHING/
-          puts table
+          # puts table
           return table
         end
 
