@@ -9,7 +9,7 @@ module Populator
     #   self.populate_from_list_page(page)
     # end
 
-    self.populate_stats_pages
+    self.populate_stats_pages(2012,2015, ['rushing','receiving','passing'] )
 
   end
 
@@ -26,10 +26,14 @@ module Populator
     Season.set_all
   end
 
-  def self.populate_stats_pages
+  def self.populate_stats_pages(start, finish, styles)
 
-    ['rushing','receiving','passing'].each do |style|
-      (2012..2015).each do |year|
+    start = start || 2015
+    finish = finish || 2015
+    styles = styles || ['rushing','receiving','passing']
+
+      styles.each do |style|
+      (start..finish).each do |year|
         self.populate_from_list_stats('http://espn.go.com/nfl/statistics/player/_/stat/'+style+'/year/'+year.to_s)
 
         #second and third page for receiving + rushing
