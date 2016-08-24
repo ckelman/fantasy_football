@@ -1,6 +1,5 @@
 <script>
 var player_arr = ["Antonio Brown","Julio Jones"]
-var removeLock = false;
 
 Array.prototype.remove= function(){
     var what, a= arguments, L= a.length, ax;
@@ -188,7 +187,6 @@ function compare(cat){
 		             	new Chartkick.LineChart("chart-1", data);
 		         
 		             	setChartTitle(data);
-		             	removeLock = false;
 		             },
 		             err:function(err1) {
 		              console.log(err);
@@ -242,10 +240,6 @@ function compare(cat){
   };
 
   function removeElement(id){
-  	if(removeLock){
-  		return;
-  	}
-  	removeLock = true;
   	id = "#"+id;
   	var playerName = $(id + " span").html();
   	player_arr.remove(playerName);
@@ -264,7 +258,9 @@ function compare(cat){
   		else{
   			$(id).addClass("odd-player-row");
   		}
-  		$(id).attr('id',"player-row-"+i);
+  		var newID = "player-row-"+i
+  		$(id).attr('id',newID);
+  		$("#"+newID+" a").click(function(){removeElement(newID); return false;});
   		
   	}
 
@@ -327,7 +323,7 @@ function compare(cat){
 		<div id="chart-1"></div>
 
 
-			<div id="actions" class="col-sm-12">
+		<div id="actions" class="col-sm-12">
 			<a id="compare" onclick="changeChart()" class="btn btn-primary btn-md left">Compare</a>
 			
 			<select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart()"> 
