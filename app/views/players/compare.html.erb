@@ -1,4 +1,20 @@
 <script>
+var player_arr = ["Antonio Brown","Julio Jones"]
+var removeLock = false;
+
+Array.prototype.remove= function(){
+    var what, a= arguments, L= a.length, ax;
+    while(L && this.length){
+        what= a[--L];
+        while((ax= this.indexOf(what))!= -1){
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+}
+
+
+
 function changeToYear(){
 	$("#career-button").removeClass("btn-info");
 	$("#career-button").addClass("btn-default");
@@ -24,26 +40,83 @@ function changeToCareer(){
 
 }
 
+function isEven(num){
+	if(num % 2 ==0)
+		return true;
+	return false;
+}
+
 function addPlayer(){
-	$('#players').append(
-		"<div class=\"col-sm-3 player-wrap\"><div class=\"player-in\"><form class=\"form\" onsubmit=\"changeChart()\"><input class=\"form-control player\" placeholder=\"Player Name\" type=\"text\" id=\"player-" + $('.player').length+ "\" list=\"plist\"><\/form><\/div><\/div>"
-		);
+	var rowClass;
+	var playerName;
+	var numPlayers = $('.player-row').length;
 
-	$('.form').submit(function () {
-	 changeChart();
-	 return false;
-	});
+	playerName = $("#player-add").val();
 
-	$("#player-" + ($('.player').length-1)).focus();
 
-};
 
-function removePlayer(){
+		$.ajax({
+		             type: 'POST',
+		             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+		             url: 'json_player_name',
+		             data: {
+		                "player_name": playerName
+		             },
+		             success:function(data) {
+		             	playerName = data["name"];
+		             	if (playerName=="" || player_arr.includes(playerName))
+		             	{
+		             		//alert("yes");
+		             		$("#player-add").val("");
+		             		return;
+		             	}	
+		             	else{
+		             		$("#player-add").val("");
+		             		$("#player-add").blur();
+
+		             		player_arr.push(playerName);
+		             		if(isEven(numPlayers))
+							rowClass="even-player-row"
+							else
+								rowClass="odd-player-row"
+
+							$("#player-rows").append(
+									"<div id=\"player-row-"+ numPlayers +"\" class=\"player-row "+ rowClass +"\"> <span class=\"graphed-player\">" + playerName + "<\/span> <a class=\"btn btn-ex\"> <i class=\"fa fa-times fa-2x ex-button\"><\/i><\/a><\/div>"
+
+								);
+
+							 $("#player-row-"+ numPlayers +" a").click(function(){removeElement("player-row-"+numPlayers); return false;});
+
+							 changeChart();
+		             	}
+
+	             		
+	             	
+		             },
+		             err:function(err1) {
+		              console.log(err);
+		             }
+		        });
+
+
+
+
+
+}
+
+function removePlayer(element){
 
 	if($('.player-wrap').length > 1){
 		$('.player-wrap:last').remove();
 	}
 };
+
+// function removePlayer(){
+
+// 	if($('.player-wrap').length > 1){
+// 		$('.player-wrap:last').remove();
+// 	}
+// };
 
 function set_all_names(input_id){
 	$.ajax({
@@ -69,15 +142,6 @@ function set_all_names(input_id){
 
 
 function getGames(){
-  var player_arr = [];
-
-	var player_nodes = $('.player');
-
-	for(var i = 0; i < player_nodes.length; i++){
-		player_arr.push($('#player-'+ i).val());
-	}
-
-
   year = $("#year-select select").val();
 
   cat = $('#graph-stat-1').val();
@@ -111,15 +175,6 @@ $.ajax({
 
 function compare(cat){
 
-	var player_arr = [];
-
-	var player_nodes = $('.player');
-
-	for(var i = 0; i < player_nodes.length; i++){
-		player_arr.push($('#player-'+ i).val());
-	}
-
-
 	$.ajax({
 		             type: 'POST',
 		             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
@@ -133,6 +188,7 @@ function compare(cat){
 		             	new Chartkick.LineChart("chart-1", data);
 		         
 		             	setChartTitle(data);
+		             	removeLock = false;
 		             },
 		             err:function(err1) {
 		              console.log(err);
@@ -185,98 +241,142 @@ function compare(cat){
 	compare('total_points');
   };
 
+  function removeElement(id){
+  	if(removeLock){
+  		return;
+  	}
+  	removeLock = true;
+  	id = "#"+id;
+  	var playerName = $(id + " span").html();
+  	player_arr.remove(playerName);
+
+  	$(id).remove();
+
+  	var playerNodes = $(".player-row");
+
+  	for(var i=0; i< playerNodes.length; i++){
+  		var id = "#"+playerNodes[i].id;
+  		$(id).removeClass("even-player-row odd-player-row");
+
+  		if(i%2==0){
+  			$(id).addClass("even-player-row");
+  		}
+  		else{
+  			$(id).addClass("odd-player-row");
+  		}
+  		$(id).attr('id',"player-row-"+i);
+  		
+  	}
+
+  	changeChart();
+
+  }
+
   $(window).ready(function(){
   	set_all_names("#plist");
   	$('#player-0').val("Antonio Brown");
   	$('#player-1').val("Julio Jones");
   	changeChart();
 
+  	$("#player-row-0 a").click(function(){removeElement("player-row-0"); return false;});
+  	$("#player-row-1 a").click(function(){removeElement("player-row-1"); return false;});
+
 
   	$('.form').submit(function () {
 	 changeChart();
 	 return false;
 	});
+
+	$("#player-col").height($(window).height()-50);
   });
 </script>
+<div style="height:100%;">
+	<div class="col-sm-10" style="float:left;">
 
+		<div class="col-sm-3">	
+			<a onclick="changeToCareer()" id="career-button" class="btn btn-info btn-md left">Career</a>
+			<a onclick="changeToYear()" id="year-button" class="btn btn-default btn-md left">Year</a>
 
-
-	<div class="col-sm-3">	
-		<a onclick="changeToCareer()" id="career-button" class="btn btn-info btn-md left">Career</a>
-		<a onclick="changeToYear()" id="year-button" class="btn btn-default btn-md left">Year</a>
-
-		<div id="year-select" hidden="true">
-			<select class="form-control" onChange="changeChart()">
-			  <option>2015</option>
-			  <option>2014</option>
-			  <option>2013</option>
-			  <option>2012</option>
-			  <option>2011</option>
-			  <option>2010</option>
-			  <option>2009</option>
-			  <option>2008</option>
-			  <option>2007</option>
-			  <option>2006</option>
-			  <option>2005</option>
-			  <option>2004</option>
-			  <option>2003</option>
-			  <option>2002</option>
-			  <option>2001</option>
-			</select>
+			<div id="year-select" hidden="true" style="width:65px;">
+				<select class="form-control" onChange="changeChart()">
+				  <option>2015</option>
+				  <option>2014</option>
+				  <option>2013</option>
+				  <option>2012</option>
+				  <option>2011</option>
+				  <option>2010</option>
+				  <option>2009</option>
+				  <option>2008</option>
+				  <option>2007</option>
+				  <option>2006</option>
+				  <option>2005</option>
+				  <option>2004</option>
+				  <option>2003</option>
+				  <option>2002</option>
+				  <option>2001</option>
+				</select>
+			</div>
 		</div>
+
+
+		<div class="col-sm-6" >
+			<h2 id="chart-title" style="text-align:center;font-weight:bold;">Category</h2>
+			<h4 id="chart-title-names" class="subtitle" style="text-align:center;">Names</h4>
+		</div>
+
+		<div id="chart-1"></div>
+
+
+			<div id="actions" class="col-sm-12">
+			<a id="compare" onclick="changeChart()" class="btn btn-primary btn-md left">Compare</a>
+			
+			<select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart()"> 
+			    <option value="total_points"><%=@stat_legend['total_points']%></option>
+			    <% @graphable.each do |stat| %>
+			    <option value="<%=stat%>"><%=@stat_legend[stat]%></option>
+			    <% end %>
+			 </select>
+		</div>
+
+
+
 	</div>
 
-
-	<div class="col-sm-6" >
-		<h2 id="chart-title" style="text-align:center;font-weight:bold;">Category</h2>
-		<h4 id="chart-title-names" class="subtitle" style="text-align:center;">Names</h4>
-	</div>
-
-	<div id="chart-1"></div>
-
-
-		<div id="actions" class="col-sm-12">
-		<a id="compare" onclick="changeChart()" class="btn btn-primary btn-md left">Compare</a>
+	<div class="col-sm-2" id="player-col" style="float:right;height:100%;overflow:auto;">
 		
-		<select name="chart-select" class="form-control" id="graph-stat-1" onchange="changeChart()"> 
-		    <option value="total_points"><%=@stat_legend['total_points']%></option>
-		    <% @graphable.each do |stat| %>
-		    <option value="<%=stat%>"><%=@stat_legend[stat]%></option>
-		    <% end %>
-		 </select>
-	</div>
+		<!-- <ol>
+		<% (1..50).each do |num| %>
+			<li> Item: <%=num%></li>
+		<%end%>
+		</ol> -->
 
-	<div id="actions" class="col-sm-12">
-		<a id="compare-add"onclick="addPlayer()" class="btn btn-success btn-md left">Add Player</a>
-		<a id="compare-remove"onclick="removePlayer()" class="btn btn-danger btn-md left">Remove Player</a>
-
-		<div id='players' class="col-sm-9">
+		<div id="player-rows">
 			<datalist id="plist">
-			</datalist>
-
-			<div class="col-sm-3 player-wrap">
-				<div class="player-in">
-					
-					<form class='form' onsubmit="changeChart()">
-						<input class="form-control tf-200 player" type="text" id="player-0" list="plist">
-					</form>
-				</div>
+				</datalist>
+			<div id="player-row-0" class="player-row even-player-row"> 
+				<span class="graphed-player">Antonio Brown</span>
+				<a class="btn btn-ex"> <i class="fa fa-times fa-2x ex-button"></i></a>
 			</div>
-
-			<div class="col-sm-3 player-wrap">
-				<div class="player-in">
-					<form class='form' onsubmit="changeChart()">
-						<input class="form-control tf-200 player" type="text" id="player-1" list="plist">
-					</form>
-				</div>
+			<div id="player-row-1" class="player-row odd-player-row"> 
+				<span class="graphed-player">Julio Jones</span>
+				<a class="btn btn-ex"> <i class="fa fa-times fa-2x ex-button"></i></a>
 			</div>
 
 		</div>
+
+		<form class='form' onsubmit="addPlayer()">
+			<input class="form-control" type="text" id="player-add" list="plist" placeholder="Add Player">
+			<a><i class="fa fa-plus fa-lg" style="float:left;padding-top:8px" onclick="addPlayer()"></i></a>
+		</form>
+
+
+
+		
+		</div>
+
+
 	</div>
-
-
-
-
+</div>
 
 	
 

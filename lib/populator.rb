@@ -9,7 +9,7 @@ module Populator
     #   self.populate_from_list_page(page)
     # end
 
-    self.populate_stats_pages(2012,2015, ['rushing','receiving','passing'] )
+    self.populate_stats_pages(2010,2015, ['rushing','receiving','passing'] )
 
   end
 
@@ -148,6 +148,9 @@ module Populator
 
       player = Player.get(name)
       year = year.to_i
+      if (year < 2010)
+        next
+      end
       season = player.get_season(year)
       position = player.position
 

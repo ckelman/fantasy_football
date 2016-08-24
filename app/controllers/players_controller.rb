@@ -82,6 +82,20 @@ class PlayersController < ApplicationController
     render :json => player_names
   end
 
+    def json_player_name
+    player = Player.get(params[:player_name])
+
+    data = {}
+
+    if (player == nil)
+        data["name"]=""
+    else
+        data["name"] = player.name
+    end
+
+    render :json =>data
+  end
+
   def json_seasons_arr
     puts(params[:players])
 

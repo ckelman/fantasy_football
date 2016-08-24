@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   post 'json_seasons' =>'players#json_seasons'
   post 'json_seasons_arr' =>'players#json_seasons_arr'
   post 'json_player_names' =>'players#json_player_names'
+  post 'json_player_name' =>'players#json_player_name'
 
   post 'json_games_arr' =>'seasons#json_games_arr'
 
