@@ -1,5 +1,6 @@
 <script>
 var player_arr = ["Antonio Brown","Julio Jones"]
+var lock = false;
 
 Array.prototype.remove= function(){
     var what, a= arguments, L= a.length, ax;
@@ -187,14 +188,18 @@ function compare(cat){
 		             	new Chartkick.LineChart("chart-1", data);
 		         
 		             	setChartTitle(data);
+
+		             	lock = false;
 		             },
 		             err:function(err1) {
 		              console.log(err);
+		              lock = false;
 		             }
 		        });
       };
 
   function changeChart(){
+  	lock = true;
   	if(!isCareer()){
   		getGames();
   	}
@@ -240,6 +245,11 @@ function compare(cat){
   };
 
   function removeElement(id){
+  	if (lock){
+  		return;
+  	}
+  	lock = true;
+  		
   	id = "#"+id;
   	var playerName = $(id + " span").html();
   	player_arr.remove(playerName);
@@ -258,9 +268,16 @@ function compare(cat){
   		else{
   			$(id).addClass("odd-player-row");
   		}
-  		var newID = "player-row-"+i
+  		var newID = "player-row-"+i;
+  		var selector = "#"+newID+" a"
+
+  		// $("#player-row-"+id+" a").off("click");
+
   		$(id).attr('id',newID);
-  		$("#"+newID+" a").click(function(){removeElement(newID); return false;});
+  		$(selector).off("click");
+  		//$(selector).click(function(){removeElement(newID); return false;});
+  		var fun = "removeElement(\""+newID+"\")"
+  		$(selector).attr("onclick",fun);
   		
   	}
 
