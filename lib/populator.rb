@@ -218,7 +218,7 @@ module Populator
                           rush_td: rush_td, fumbles: fumbles, fumbles_lost: fumbles_lost, win: win, points: points)
             end
 
-          elsif(position == "RB" || (position.downcase.include? "back") || (number.downcase.include? "running"))
+          elsif(position == "RB" || position == "FB" || (position.downcase.include? "back") || (number.downcase.include? "running"))
             # 
             # 
             # Just need to set up for different order of stats for RB and QB
