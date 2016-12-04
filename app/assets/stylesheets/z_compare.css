@@ -58,9 +58,31 @@
 	color:#800000;
 }
 
+.plus-button{
+	
+	margin-left: -9px;
+    margin-top: -5px;
+}
+
+.btn-plus{
+	height:30px;
+	width:30px;
+	margin-right:8px;
+	float:right;
+	background-color:white;
+	color:#15CF15;
+	border-color:#666666;
+}
+.btn-plus:hover{
+	background-color:gray;
+	color:#056005;
+}
+
+
+
 .player-row{
 	height:40px;
-	font-size:16pt;
+	font-size:12pt;
 	font-weight:600;
 	padding-top:7px;
 	border-bottom-color:gray;

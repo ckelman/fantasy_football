@@ -157,6 +157,7 @@ module Populator
       end
       season = player.get_season(year)
       position = player.position
+      number = player.number
 
 
       games.each do |game|
