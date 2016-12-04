@@ -199,7 +199,7 @@ function compare(cat){
       };
 
   function changeChart(){
-  	lock = true;
+  	// lock = true;
   	if(!isCareer()){
   		getGames();
   	}
@@ -248,7 +248,7 @@ function compare(cat){
   	if (lock){
   		return;
   	}
-  	lock = true;
+  	// lock = true;
   		
   	id = "#"+id;
   	var playerName = $(id + " span").html();
@@ -312,6 +312,7 @@ function compare(cat){
 
 			<div id="year-select" hidden="true" style="width:65px;">
 				<select class="form-control" onChange="changeChart()">
+				  <option>2016</option>
 				  <option>2015</option>
 				  <option>2014</option>
 				  <option>2013</option>

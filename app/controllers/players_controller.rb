@@ -1,5 +1,7 @@
 class PlayersController < ApplicationController
   require 'json'
+   skip_before_action :verify_authenticity_token
+
   def show
     @player = Player.find(params[:id])
 

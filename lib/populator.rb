@@ -9,8 +9,12 @@ module Populator
     #   self.populate_from_list_page(page)
     # end
 
-    self.populate_stats_pages(2010,2015, ['rushing','receiving','passing'] )
+    self.populate_stats_pages(2010,2016, ['rushing','receiving','passing'] )
 
+  end
+
+  def self.update_current_year
+    self.populate_stats_pages(2016,2016,nil)
   end
 
   def self.populate_fantasy_pages
@@ -28,8 +32,8 @@ module Populator
 
   def self.populate_stats_pages(start, finish, styles)
 
-    start = start || 2015
-    finish = finish || 2015
+    start = start || 2016
+    finish = finish || 2016
     styles = styles || ['rushing','receiving','passing']
 
       styles.each do |style|
@@ -213,7 +217,7 @@ module Populator
                           rush_td: rush_td, fumbles: fumbles, fumbles_lost: fumbles_lost, win: win, points: points)
             end
 
-          elsif(position == "RB")
+          elsif(position == "RB" || (position.downcase.include? "back") || (number.downcase.include? "running"))
             # 
             # 
             # Just need to set up for different order of stats for RB and QB
@@ -448,12 +452,14 @@ module Populator
 
       player = Player.create(name: name, position: position,
                 team: team, age: age, number: number, experience: experience, weight: weight)
+
+
     end
 
-    if(experience!= nil && experience != 1)
+    #if(experience!= nil && experience != 1)
 
       self.parse_seasons(page, player)
-    end
+    #end
 
     # Uncomment this to pull games
     self.parse_games(url)
